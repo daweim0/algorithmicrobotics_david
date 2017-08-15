@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+
+# Modified by PCH 2017
+
 import rospy
 from duckietown_msgs.msg import WheelsCmdStamped, BoolStamped
 from dagu_car.dagu_wheels_driver import DaguWheelsDriver
@@ -18,7 +21,6 @@ class WheelsDriverNode(object):
         # Setup subscribers
         self.control_constant = 1.0
         self.sub_topic = rospy.Subscriber("~wheels_cmd", WheelsCmdStamped, self.cbWheelsCmd, queue_size=1)
-        self.sub_e_stop = rospy.Subscriber("~emergency_stop", BoolStamped, self.cbEStop, queue_size=1)
 
     def setupParam(self,param_name,default_value):
         value = rospy.get_param(param_name,default_value)
@@ -38,13 +40,6 @@ class WheelsDriverNode(object):
         self.msg_wheels_cmd.vel_left = msg.vel_left
         self.msg_wheels_cmd.vel_right = msg.vel_right
         self.pub_wheels_cmd.publish(self.msg_wheels_cmd)
-
-    def cbEStop(self,msg):
-        self.estop=not self.estop
-        if self.estop:
-            rospy.loginfo("[%s] Emergency Stop Activated")
-        else:
-            rospy.loginfo("[%s] Emergency Stop Released")
 
     def on_shutdown(self):
         self.driver.setWheelsSpeed(left=0.0,right=0.0)

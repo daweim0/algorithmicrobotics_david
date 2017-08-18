@@ -1,6 +1,5 @@
 /CMakeList.txt
 .DS_Store
 *.pyc
-*.txt
 *.jpg
 *.png

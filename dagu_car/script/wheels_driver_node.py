@@ -31,8 +31,8 @@ class WheelsDriverNode(object):
         self.pub_wheels.publish(self.msg_out)
 
     def on_shutdown(self):
-        self.driver.set_wheels_speed(right=0.0, left=0.0)
-        rospy.loginfo("[%s] Shutting down." % rospy.node_name)
+        self.driver.set_wheel_speeds(right=0.0, left=0.0)
+        rospy.loginfo("[%s] Shutting down." % self.node_name)
 
 if __name__ == '__main__':
     # Initialize the node with rospy

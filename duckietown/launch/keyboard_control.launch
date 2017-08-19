@@ -5,13 +5,10 @@
 
     <node pkg="dagu_car"  name="kinematics_node" type="kinematics_node.py" output="screen" required="true">
         <remap from="kinematics_node/car_vel_in" to="car_vel_cmd"/>
-        <remap from="kinematics_node/wheels_cmd_out" to="wheels_cmd"/>
-        <remap from="kinematics_node/wheels_cmd_in" to="wheels_cmd_executed"/>
-        <remap from="kinematics_node/car_vel_out" to="car_vel_executed"/>
+        <remap from="kinematics_node/wheel_speeds_out" to="wheels_cmd"/>
     </node>
 
     <node pkg="dagu_car"  name="wheels_driver_node" type="wheels_driver_node.py" output="screen" required="true">
         <remap from="wheels_driver_node/wheels_cmd" to="wheels_cmd"/>
-        <remap from="wheels_driver_node/wheels_cmd_executed" to="wheels_cmd_executed"/>
     </node>
 </launch>

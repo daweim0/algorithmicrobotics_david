@@ -107,7 +107,7 @@ class KinematicsNode(object):
                 self.node_name, name, value))
         else:
             self.print_params()
-        return SetValueResponse(success)
+        return SetParamResponse(success)
 
     def print_params(self):
         rospy.loginfo("[%s] gain: %s trim: %s baseline: %s radius: %s k: %s limit: %s" % (

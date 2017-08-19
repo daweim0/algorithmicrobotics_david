@@ -3,7 +3,7 @@
 # Modified by PCH 2017
 
 import rospy
-from duckietown_msgs.msg import WheelsSpeedsStamped
+from duckietown_msgs.msg import WheelSpeedsStamped
 from dagu_car.dagu_wheels_driver import DaguWheelsDriver
 
 class WheelsDriverNode(object):
@@ -14,11 +14,11 @@ class WheelsDriverNode(object):
         # Wheels driver object
         self.driver = DaguWheelsDriver()
         # Reuse message for sending
-        self.msg_out = WheelsSpeedsStamped()
+        self.msg_out = WheelSpeedsStamped()
         # Publisher for executed commands
-        self.pub_wheels = rospy.Publisher("~wheels_cmd_executed", WheelsSpeedsStamped, queue_size=1)
+        self.pub_wheels = rospy.Publisher("~wheels_cmd_executed", WheelSpeedsStamped, queue_size=1)
         # Listen for new commands
-        rospy.Subscriber("~wheels_cmd", WheelsSpeedsStamped, self.on_wheels_cmd, queue_size=1)
+        rospy.Subscriber("~wheels_cmd", WheelSpeedsStamped, self.on_wheels_cmd, queue_size=1)
 
     def on_wheels_cmd(self, msg):
         self.driver.set_wheel_speeds(right=msg.right, left=msg.left)

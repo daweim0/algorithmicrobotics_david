@@ -43,7 +43,7 @@ class KinematicsNode(object):
         self.pub_vel = rospy.Publisher("~car_vel_out", Twist2DStamped, queue_size=1)
 
         rospy.loginfo("[%s] Initialized.", self.node_name)
-        self.printValues()
+        self.print_params()
 
     def read_param_file(self):
         """

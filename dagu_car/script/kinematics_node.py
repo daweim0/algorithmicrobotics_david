@@ -1,8 +1,13 @@
 #!/usr/bin/env python
 
-# Dagu Car Kinematics
 # Author: Robert Katzschmann, Shih-Yuan Liu
 # Modified by PCH 2017
+
+"""
+Description: Converts Twist2DStamped msgs (linear and angular car velocities)
+to WheelSpeedsStamped msgs and vice versa. Car kinematic parameters and gains
+can be set through a service.
+"""
 
 import rospy
 from duckietown_msgs.msg import WheelSpeedsStamped, Twist2DStamped

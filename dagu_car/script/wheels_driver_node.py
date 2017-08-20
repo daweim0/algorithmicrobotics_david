@@ -2,6 +2,12 @@
 
 # Modified by PCH 2017
 
+"""
+Description: Listens for WheelSpeedsStamped msgs, sets the motor inputs
+accordingly, and publishes WheelSpeedsStamped msgs to announce when it
+sets the motors.
+"""
+
 import rospy
 from duckietown_msgs.msg import WheelSpeedsStamped
 from dagu_car.dagu_wheels_driver import DaguWheelsDriver

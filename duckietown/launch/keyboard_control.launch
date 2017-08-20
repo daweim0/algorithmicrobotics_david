@@ -1,15 +1,21 @@
+<?xml version="1.0"?>
 <launch>
     <arg name="veh" default="pi" doc="Name of vehicle."/>
+
     <node ns="$(arg veh)" pkg="keyboard_control"  name="keyboard_control_node" type="keyboard_control_node.py" output="screen" required="true">
+        <!-- Publishes target car velocities. -->
         <remap from="keyboard_control_node/car_vel_cmd" to="car_vel_cmd"/>
     </node>
 
     <node ns="$(arg veh)" pkg="dagu_car"  name="kinematics_node" type="kinematics_node.py" output="screen" required="true">
+        <!-- Listens for target car velocities. -->
         <remap from="kinematics_node/car_vel_in" to="car_vel_cmd"/>
+        <!-- Publishes corresponding wheel speed commands. -->
         <remap from="kinematics_node/wheel_speeds_out" to="wheels_cmd"/>
     </node>
 
     <node ns="$(arg veh)" pkg="dagu_car"  name="wheels_driver_node" type="wheels_driver_node.py" output="screen" required="true">
+        <!-- Listens for wheel speed commands. -->
         <remap from="wheels_driver_node/wheels_cmd" to="wheels_cmd"/>
     </node>
 </launch>

@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 import rospy
 import rospkg
-from sensor_msgs.msg import CameraInfo, CompressedImage, Image
-import os.path
 import yaml
+from sensor_msgs.msg import CameraInfo, CompressedImage, Image
+from sensor_msgs.srv import SetCameraInfo, SetCameraInfoResponse
+import os.path
 
-class CamInfoReader(object):
+class CamInfoNode(object):
     def __init__(self):
         self.node_name = rospy.get_name()
         # Load parameters
@@ -15,7 +16,7 @@ class CamInfoReader(object):
         self.image_type = self.setupParam("~image_type", "compressed")
 
         # Setup publisher
-        self.pub_camera_info = rospy.Publisher("~camera_info",CameraInfo,queue_size=1)
+        self.pub_cam_info = rospy.Publisher("~camera_info",CameraInfo,queue_size=1)
         # Get path to calibration yaml file
         rospack = rospkg.RosPack()
         self.cali_file = rospack.get_path('duckietown') + "/config/" + self.config + "/calibration/camera_intrinsic/" +  self.cali_file_name + ".yaml" 
@@ -35,21 +36,17 @@ class CamInfoReader(object):
         self.camera_info_msg = self.loadCameraInfo(self.cali_file)
         self.camera_info_msg.header.frame_id = rospy.get_namespace() + "camera_optical_frame"
         rospy.loginfo("[%s] CameraInfo: %s" %(self.node_name,self.camera_info_msg))
-        # self.timer_pub = rospy.Timer(rospy.Duration.from_sec(1.0/self.pub_freq),self.cbTimer)
 
-        img_type = CompressedImage if self.image_type == "compressed" else Image
-        typemsg = "CompressedImage" if self.image_type == "compressed" else "Image"
-        rospy.logwarn("[%s] ==============%s",self.node_name, typemsg)
-        self.sub_img_compressed = rospy.Subscriber("~compressed_image",img_type,self.cbCompressedImage,queue_size=1)
+        rospy.Subscriber("~compressed_image", CompressedImage, self.cbCompressedImage,queue_size=1)
     
+        # Create service (for camera_calibration)
+        rospy.Service("~set_camera_info", SetCameraInfo, self.cbSrvSetCameraInfo)
+
     def cbCompressedImage(self,msg):
+        # Note (PCH): camera info is only set once during launch.
         if self.camera_info_msg is not None:
             self.camera_info_msg.header.stamp = msg.header.stamp
-            self.pub_camera_info.publish(self.camera_info_msg)
-
-    # def cbTimer(self,event):
-    #     self.camera_info_msg.header.stamp = rospy.Time.now()
-    #     self.pub_camera_info.publish(self.camera_info_msg)
+            self.pub_cam_info.publish(self.camera_info_msg)
 
     def setupParam(self,param_name,default_value):
         value = rospy.get_param(param_name,default_value)
@@ -73,8 +70,40 @@ class CamInfoReader(object):
     def on_shutdown(self):
         rospy.loginfo("[%s] Shutdown." %(self.node_name))
 
+    def cbSrvSetCameraInfo(self,req):
+        # TODO: save req.camera_info to yaml file
+        rospy.loginfo("[cbSrvSetCameraInfo] Callback!")
+        filename = self.cali_file_folder + rospy.get_namespace().strip("/") + ".yaml"
+        response = SetCameraInfoResponse()
+        response.success = self.saveCameraInfo(req.camera_info,filename)
+        response.status_message = "Write to %s" %filename #TODO file name
+        return response
+
+    def saveCameraInfo(self, camera_info_msg, filename):
+        # Convert camera_info_msg and save to a yaml file
+        rospy.loginfo("[saveCameraInfo] filename: %s" %(filename))
+        file = open(filename, 'w')
+
+        # Converted from camera_info_manager.py
+        calib = {'image_width': camera_info_msg.width,
+        'image_height': camera_info_msg.height,
+        'camera_name': rospy.get_name().strip("/"), #TODO check this
+        'distortion_model': camera_info_msg.distortion_model,
+        'distortion_coefficients': {'data': camera_info_msg.D, 'rows':1, 'cols':5},
+        'camera_matrix': {'data': camera_info_msg.K, 'rows':3, 'cols':3},
+        'rectification_matrix': {'data': camera_info_msg.R, 'rows':3, 'cols':3},
+        'projection_matrix': {'data': camera_info_msg.P,'rows':3, 'cols':4}}
+        
+        rospy.loginfo("[saveCameraInfo] calib %s" %(calib))
+
+        try:
+            rc = yaml.safe_dump(calib, file)
+            return True
+        except IOError:
+            return False
+
 if __name__ == '__main__': 
-    rospy.init_node('cam_info_reader',anonymous=False)
-    node = CamInfoReader()
+    rospy.init_node('cam_info_node',anonymous=False)
+    node = CamInfoNode()
     rospy.on_shutdown(node.on_shutdown)
     rospy.spin()

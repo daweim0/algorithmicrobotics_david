@@ -4,10 +4,9 @@ project(dagu_car)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
+  adafruit_drivers
+  duckietown_msgs
 )
-
-find_package(adafruit_drivers)
-find_package(duckietown_msgs)
 
 catkin_package()
 

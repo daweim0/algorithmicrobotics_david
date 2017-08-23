@@ -10,7 +10,7 @@ sets the motors.
 
 import rospy
 from duckietown_msgs.msg import WheelSpeedsStamped
-from dagu_car.dagu_wheels_driver import DaguWheelsDriver
+from dagu_wheels_driver import DaguWheelsDriver
 
 class WheelsDriverNode(object):
     def __init__(self):

@@ -1,4 +1,19 @@
 #!/usr/bin/env python
+
+# Modified by PCH 2017
+
+"""
+Description: Decompresses image messages and publishes the corresponding raw
+images if enabled (true by default).
+
+Publications
+    ~raw_image (Image)
+
+Subscriptions
+    ~compressed_image (CompressedImage)
+    ~enable (BoolStamped)
+"""
+
 import rospy
 from cv_bridge import CvBridge, CvBridgeError
 import cv2

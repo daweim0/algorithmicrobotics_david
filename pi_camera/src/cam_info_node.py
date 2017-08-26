@@ -1,4 +1,21 @@
 #!/usr/bin/env python
+
+# Modified by PCH 2017
+
+"""
+Description: Publishes camera calibration info every time an images is
+received. New calibration parameters can be saved to file through a service.
+
+Publications
+    ~camera_info (CameraInfo)
+
+Subscriptions
+    ~compressed_image (CompressedImage)
+
+Services (advertised)
+    ~set_camera_info (SetCameraInfo)
+"""
+
 import rospy
 import rospkg
 import yaml

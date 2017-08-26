@@ -4,9 +4,20 @@
 # Modified by PCH 2017
 
 """
-Description: Converts Twist2DStamped msgs (linear and angular car velocities)
-to WheelSpeedsStamped msgs and vice versa. Car kinematic parameters and gains
-can be set through a service.
+Description: Converts car velocities to wheel speeds and vice versa. Car
+kinematic parameters and gains can be set through a service.
+
+Publications
+    ~car_vel_out (Twist2DStamped)
+    ~wheel_speeds_out (WheelSpeedsStamped)
+
+Subscriptions
+    ~car_vel_in (Twist2DStamped)
+    ~wheel_speeds_in (WheelSpeedsStamped)
+
+Services (advertised)
+    ~save_params (SetParam)
+    ~set_param (Empty)
 """
 
 import rospy

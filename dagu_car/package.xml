@@ -2,7 +2,7 @@
 <package>
   <name>dagu_car</name>
   <version>0.0.0</version>
-  <description>Interface for driving the dagu car.</description>
+  <description>Interface for driving the dagu car</description>
 
   <maintainer email="zhangz17@school.edu">zhangz17</maintainer>
   <maintainer email="horakp@school.edu">horakp</maintainer>

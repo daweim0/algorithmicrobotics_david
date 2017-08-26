@@ -2,7 +2,7 @@
 <package>
   <name>keyboard_control</name>
   <version>0.0.0</version>
-  <description>Publishes car velocities based on keyboard input.</description>
+  <description>Publishes car velocities based on keyboard input</description>
 
   <maintainer email="zhangz17@school.edu">zhangz17</maintainer>
   <maintainer email="horakp@school.edu">horakp</maintainer>

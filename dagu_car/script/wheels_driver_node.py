@@ -3,9 +3,14 @@
 # Modified by PCH 2017
 
 """
-Description: Listens for WheelSpeedsStamped msgs, sets the motor inputs
-accordingly, and publishes WheelSpeedsStamped msgs to announce when it
-sets the motors.
+Description: Listens for wheel speed msgs, sets the motor inputs accordingly,
+and publishes wheel speed msgs to announce when it sets the motors.
+
+Publications
+    ~wheels_cmd_executed (WheelSpeedsStamped)
+
+Subscriptions
+    ~wheels_cmd (WheelSpeedsStamped)
 """
 
 import rospy

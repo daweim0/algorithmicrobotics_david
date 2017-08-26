@@ -1,4 +1,17 @@
 #!/usr/bin/env python
+
+# Modified by PCH 2017
+
+"""
+Description: Publish compressed images from the pi camera at 30 Hz (default).
+
+Publications
+    ~compressed_image (CompressedImage)
+
+Services (advertised)
+    ~set_param (SetParam)
+"""
+
 import rospy
 from sensor_msgs.msg import CompressedImage
 from duckietown_msgs.srv import SetParam, SetParamResponse

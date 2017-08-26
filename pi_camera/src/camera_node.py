@@ -16,6 +16,7 @@ import rospy
 from sensor_msgs.msg import CompressedImage
 from duckietown_msgs.srv import SetParam, SetParamResponse
 import io
+import thread
 from picamera import PiCamera
 
 class CameraNode(object):
@@ -101,14 +102,9 @@ class CameraNode(object):
 
             rospy.sleep(0.001) # 1ms
 
-    def onShutdown(self):
-        rospy.loginfo("[%s] Shutdown." %(self.node_name))
-
-
 if __name__ == '__main__': 
     rospy.init_node('camera_node',anonymous=False)
     camera_node = CameraNode()
-    rospy.on_shutdown(camera_node.onShutdown)
-    camera_node.start_capturing()
-    # Node (PCH): rospy.spin should not be necessary because rospy handles
-    # callbacks in a separate thread.
+    # Node (PCH): thread is used so that node responds to shutdown signal.
+    thread.start_new_thread(camera_node.start_capturing, ())
+    rospy.spin()

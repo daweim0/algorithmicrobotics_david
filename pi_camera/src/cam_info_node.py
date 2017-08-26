@@ -42,7 +42,6 @@ class CamInfoNode(object):
         rospy.Service("~set_camera_info", SetCameraInfo, self.on_save_camera_info)
 
         rospy.loginfo("[%s] Initialized.", self.node_name)
-        rospy.loginfo("[%s] CameraInfo: %s" % (self.node_name, self.camera_info_msg))
 
     def on_image(self, msg):
         # Note (PCH): the camera info is only set during launch.
@@ -55,9 +54,8 @@ class CamInfoNode(object):
         file_name = self.get_config_path(self.veh_name)
         # Check file existence
         if not os.path.isfile(file_name):
-            rospy.logwarn("[%s] %s does not exist. Using default calibration instead." % (
-                self.node_name, file_name))
-            file_name = setf.get_config_path("default")
+            rospy.logwarn("[%s] %s does not exist. Using default calibration instead." % (self.node_name, file_name))
+            file_name = self.get_config_path("default")
         if not os.path.isfile(file_name):
             rospy.logwarn("[%s] Default calibration not found." % (self.node_name))
             return None
@@ -74,7 +72,7 @@ class CamInfoNode(object):
             return None
 
         # Construct calibration message from parameter file
-        am_info = CameraInfo()
+        cam_info = CameraInfo()
         cam_info.width = yaml_dict['image_width']
         cam_info.height = yaml_dict['image_height']
         cam_info.distortion_model = yaml_dict['distortion_model']
@@ -82,6 +80,8 @@ class CamInfoNode(object):
         cam_info.K = yaml_dict['camera_matrix']['data']
         cam_info.R = yaml_dict['rectification_matrix']['data']
         cam_info.P = yaml_dict['projection_matrix']['data']
+
+        rospy.loginfo("[%s] Read calibration file %s" % (self.node_name, file_name))
         return cam_info
 
     def get_config_path(self, name):

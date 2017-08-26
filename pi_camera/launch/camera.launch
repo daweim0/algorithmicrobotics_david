@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="veh" default="pi" doc="Name of vehicle."/>
+
+    <group ns="$(arg veh)">
+        <!-- Publishes jpeg compressed images from the pi camera -->
+        <node name="camera_node" pkg="pi_camera" type="camera_node.py" output="screen" required="true"/>
+        
+        <!-- Publishes camera calibration parameters and provides a service to set them -->
+        <node name="cam_info_node" pkg="pi_camera" type="cam_info_node.py" output="screen" required="true">
+            <remap from="cam_info_node/compressed_image" to="camera_node/image/compressed"/>
+            <remap from="cam_info_node/camera_info" to="camera_node/camera_info"/>
+            <remap from="cam_info_node/set_camera_info" to="camera_node/set_camera_info"/>
+        </node>
+
+        <!-- Decompresses images published from the camera node -->
+        <node name="decoder_node" pkg="pi_camera" type="decoder_node.py"  output="screen" required="true">
+            <remap from="decoder_node/compressed_image" to="camera_node/image/compressed"/>
+            <remap from="decoder_node/raw_image" to="camera_node/image/raw"/>
+        </node> 
+
+        <!-- Applies camera calibration to decompressed (raw) images-->
+        <!-- http://wiki.ros.org/image_proc -->
+        <node name="image_proc_node" pkg="image_proc" type="image_proc" output="screen" required="true">
+            <remap from="image_raw" to="camera_node/image/raw"/>
+            <remap from="camera_info" to="camera_node/camera_info"/>
+            <remap from="image_rect_color" to="camera_node/image/rect"/>
+        </node>
+    </group>
+</launch>

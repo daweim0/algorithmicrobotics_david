@@ -1,14 +1,13 @@
 #!/usr/bin/env python
 import rospy
 from sensor_msgs.msg import CompressedImage
-from duckietown_msgs.msg import BoolStamped
+from duckietown_msgs.srv import SetParam, SetParamResponse
 import io
 from picamera import PiCamera
 
 class CameraNode(object):
     def __init__(self):
         self.node_name = rospy.get_name()
-        rospy.loginfo("[%s] Initializing......" % (self.node_name))
 
         # Default parameters
         self.framerate = 30 # Hz

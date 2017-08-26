@@ -15,7 +15,6 @@ from dagu_wheels_driver import DaguWheelsDriver
 class WheelsDriverNode(object):
     def __init__(self):
         self.node_name = rospy.get_name()
-        rospy.loginfo("[%s] Initializing." % self.node_name)
 
         # Wheels driver object
         self.driver = DaguWheelsDriver()
@@ -25,6 +24,8 @@ class WheelsDriverNode(object):
         self.pub_wheels = rospy.Publisher("~wheels_cmd_executed", WheelSpeedsStamped, queue_size=1)
         # Listen for new commands
         rospy.Subscriber("~wheels_cmd", WheelSpeedsStamped, self.on_wheels_cmd, queue_size=1)
+
+        rospy.loginfo("[%s] Initialized.", self.node_name)
 
     def on_wheels_cmd(self, msg):
         self.driver.set_wheel_speeds(right=msg.right, left=msg.left)

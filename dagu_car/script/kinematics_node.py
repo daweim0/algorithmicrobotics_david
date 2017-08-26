@@ -11,8 +11,8 @@ can be set through a service.
 
 import rospy
 from duckietown_msgs.msg import WheelSpeedsStamped, Twist2DStamped
-from duckietown_msgs.srv import SetParamRequest, SetParamResponse, SetParam
-from std_srvs.srv import EmptyRequest, EmptyResponse, Empty
+from duckietown_msgs.srv import SetParam, SetParamResponse
+from std_srvs.srv import Empty, EmptyResponse
 import rospkg
 import yaml
 import time

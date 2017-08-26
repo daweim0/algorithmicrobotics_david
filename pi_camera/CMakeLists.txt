@@ -3,10 +3,9 @@ project(pi_camera
 )
 
 find_package(catkin REQUIRED COMPONENTS
-  roscpp
   rospy
+  sensor_msgs
   duckietown_msgs
-  std_msgs
 )
 
 catkin_package()

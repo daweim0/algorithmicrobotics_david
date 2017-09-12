@@ -2,7 +2,7 @@
 	<arg name="veh" default="pi" doc="Name of vehicle."/>
 
 	<!-- Camera nodes including capture, decompression, rectification, etc. -->
-	<include file="$(find duckietown)/launch/camera.launch">
+	<include file="$(find pi_camera)/launch/camera.launch">
 		<arg name="veh" value="$(arg veh)"/>
 	</include>
 

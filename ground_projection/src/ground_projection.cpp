@@ -61,17 +61,13 @@ public:
     // load from homography yaml file
     nh_.param<std::string>("config", config_name_, "baseline");
     nh_.param<std::string>("config_file_name", config_file_name_, "default");
-    h_file_ = DT
-             + "/config/" + config_name_ +
-             "/calibration/camera_extrinsic/"
-             + config_file_name_ + ".yaml";
+    h_file_ = DT + "/config/pi_camera/calib_extrinsic/" + config_file_name_ + ".yaml";
     std::ifstream fin(h_file_.c_str());
     if (!fin.good())
     {
       ROS_WARN_STREAM("Can't find homography file: " << h_file_ <<
                       " Using default calibration instead.");
-      h_file_ = DT + "/config/" + config_name_ + "/calibration/camera_extrinsic/default.yaml";
-      // h_file_ = get_package_filename("package://ground_projection/homography/default.yaml");
+      h_file_ = DT + "/config/pi_camera/calib_extrinsic/default.yaml";
     }
     ROS_INFO("load from homography yaml file [%s].", h_file_.c_str());
 

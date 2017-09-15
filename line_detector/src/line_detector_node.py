@@ -3,8 +3,7 @@ from anti_instagram.AntiInstagram import AntiInstagram
 from cv_bridge import CvBridge, CvBridgeError
 from duckietown_msgs.msg import (AntiInstagramTransform, BoolStamped, Segment,
     SegmentList, Vector2D)
-from duckietown_utils.instantiate_utils import instantiate
-from duckietown_utils.jpg import image_cv_from_jpg
+from line_detector.instantiate_utils import instantiate
 from geometry_msgs.msg import Point
 from sensor_msgs.msg import CompressedImage, Image
 from visualization_msgs.msg import Marker
@@ -142,9 +141,8 @@ class LineDetectorNode(object):
         self.intermittent_counter += 1
 
         # Decode from compressed image with OpenCV
-        try:
-            image_cv = image_cv_from_jpg(image_msg.data)
-        except ValueError as e:
+        image_cv = cv2.imdecode(np.fromstring(image_msg.data, np.uint8), cv2.IMREAD_COLOR)
+        if image_cv is None:
             self.loginfo('Could not decode image: %s' % e)
             return
 

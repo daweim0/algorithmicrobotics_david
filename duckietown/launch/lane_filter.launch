@@ -14,7 +14,7 @@
     </node>
 
     <!-- Produces visualization messages for rviz -->
-    <node ns="$(arg veh)" name="lane_filter_visualizer" pkg="lane_filter" type="lane_filter_visualizer.py" output="screen" required="true">
+    <node ns="$(arg veh)" name="lane_pose_visualizer_node" pkg="lane_filter" type="lane_pose_visualizer_node.py" output="screen" required="true">
         <remap from="~lane_pose" to="lane_filter_node/lane_pose"/>
     </node>
 

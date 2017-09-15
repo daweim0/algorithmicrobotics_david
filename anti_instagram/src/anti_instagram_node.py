@@ -3,9 +3,10 @@ import rospy
 from sensor_msgs.msg import CompressedImage,Image  # @UnresolvedImport
 from duckietown_msgs.msg import AntiInstagramHealth, BoolStamped, AntiInstagramTransform  # @UnresolvedImport
 from anti_instagram.AntiInstagram import *
-from duckietown_utils.jpg import image_cv_from_jpg
 from cv_bridge import CvBridge  # @UnresolvedImport
 from line_detector.timekeeper import TimeKeeper
+import cv2
+import numpy as np
 
 class AntiInstagramNode():
     def __init__(self):
@@ -93,9 +94,8 @@ class AntiInstagramNode():
         tk = TimeKeeper(msg)
         
         #cv_image = self.bridge.imgmsg_to_cv2(msg,"bgr8")
-        try:
-            cv_image = image_cv_from_jpg(msg.data)
-        except ValueError as e:
+        cv_image = cv2.imdecode(np.fromstring(msg.data, np.uint8), cv2.IMREAD_COLOR)
+        if cv_image is None:
             rospy.loginfo('Anti_instagram cannot decode image: %s' % e)
             return
         

@@ -10,6 +10,7 @@
     <!-- Ground projection -->
     <node ns="$(arg veh)" name="ground_projection" pkg="ground_projection" type="ground_projection" output="screen" required="true">
         <remap from="~lineseglist_in" to="line_detector_node/segment_list"/>
+        <!-- Note: image rectified internally -->
         <remap from="~cali_image" to="camera_node/image/raw"/>
         <remap from="~camera_info" to="camera_node/camera_info"/>
     </node>

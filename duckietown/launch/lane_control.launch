@@ -13,7 +13,8 @@
     </include>
 
     <!-- Lane controller -->
-    <node ns="$(arg veh)" name="lane_controller_node" pkg="lane_controller" type="lane_controller_node.py" output="screen" required="true">
+    <node ns="$(arg veh)" name="lane_controller_node" pkg="lane_control" type="lane_controller_node.py" output="screen" required="true">
         <remap from="~lane_pose" to="lane_filter_node/lane_pose"/>
+        <remap from="~car_cmd" to="dagu_car/vel_cmd"/>
     </node>
 </launch>

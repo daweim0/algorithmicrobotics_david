@@ -18,13 +18,11 @@ add_message_files(
   FILES
   AntiInstagramTransform.msg
   BoolStamped.msg
-  CarControl.msg
   LanePose.msg
   Pixel.msg
   Pose2DStamped.msg
   Segment.msg
   SegmentList.msg
-  Trajectory.msg
   Twist2DStamped.msg
   Vector2D.msg
   WheelSpeedsStamped.msg

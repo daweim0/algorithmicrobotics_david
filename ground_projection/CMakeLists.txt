@@ -45,7 +45,6 @@ add_service_files(
   FILES
   GetGroundCoord.srv
   GetImageCoord.srv
-  EstimateHomography.srv
 )
 
 ## Generate added messages and services with any dependencies listed here

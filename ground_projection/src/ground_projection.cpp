@@ -14,7 +14,6 @@
 #include "geometry_msgs/Point.h"
 #include "ground_projection/GetGroundCoord.h"
 #include "ground_projection/GetImageCoord.h"
-#include "ground_projection/EstimateHomography.h"
 #include "duckietown_msgs/Pixel.h"
 #include "duckietown_msgs/Vector2D.h"
 #include "duckietown_msgs/Segment.h"
@@ -46,7 +45,6 @@ class GroundProjection
 
   std::string node_name_;
 
-  std::string config_name_;
   std::string config_file_name_;
   std::string h_file_;
 
@@ -59,9 +57,8 @@ public:
 
     std::string DT = ros::package::getPath("duckietown");
     // load from homography yaml file
-    nh_.param<std::string>("config", config_name_, "baseline");
-    nh_.param<std::string>("config_file_name", config_file_name_, "default");
-    h_file_ = DT + "/config/pi_camera/calib_extrinsic/" + config_file_name_ + ".yaml";
+    h_file_ = DT + "/config/pi_camera/calib_extrinsic/"
+                 + ros::this_node::getNamespace() + ".yaml";
     std::ifstream fin(h_file_.c_str());
     if (!fin.good())
     {
@@ -284,9 +281,8 @@ private:
     }
     // Write to yaml file
     std::string wrtie_file_path = ros::package::getPath("duckietown")
-            + "/config/" +
-            config_name_ +
-             "/calibration/camera_extrinsic" + ros::this_node::getNamespace() + ".yaml";
+            + "/config/pi_camera/calib_extrinsic"
+            + ros::this_node::getNamespace() + ".yaml";
     ROS_INFO("Homography yaml file [%s].", wrtie_file_path.c_str());
     write_homography_yaml(wrtie_file_path, vec_homography);
     return true;
@@ -441,31 +437,6 @@ private:
 
     out << emitter.c_str();
     return true;
-  }
-
-
-  std::string get_package_filename(const std::string &url)
-  {
-    ROS_DEBUG_STREAM("homography URL: " << url);
-
-    // Scan URL from after "package://" until next '/' and extract
-    // package name.
-    size_t prefix_len = std::string("package://").length();
-    size_t rest = url.find('/', prefix_len);
-    std::string package(url.substr(prefix_len, rest - prefix_len));
-
-    // Look up the ROS package path name.
-    std::string pkgPath(ros::package::getPath(package));
-    if(pkgPath.empty())
-    {
-      ROS_WARN_STREAM("unknown package: " << package << " (ignored)");
-      return pkgPath;
-    }
-    else
-    {
-      // Construct file name from package location and remainder of URL.
-      return pkgPath + url.substr(rest);
-    }
   }
 
 };

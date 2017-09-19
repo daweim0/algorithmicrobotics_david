@@ -16,8 +16,6 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate messages in the 'msg' folder
 add_message_files(
   FILES
-  AntiInstagramHealth.msg
-  AntiInstagramTransform.msg
   BoolStamped.msg
   LanePose.msg
   Pixel.msg

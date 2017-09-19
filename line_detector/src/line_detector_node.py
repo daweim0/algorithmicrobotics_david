@@ -1,8 +1,6 @@
 #!/usr/bin/env python
-from anti_instagram.AntiInstagram import AntiInstagram
 from cv_bridge import CvBridge, CvBridgeError
-from duckietown_msgs.msg import (AntiInstagramTransform, BoolStamped, Segment,
-    SegmentList, Vector2D)
+from duckietown_msgs.msg import (BoolStamped, Segment, SegmentList, Vector2D)
 from line_detector.instantiate_utils import instantiate
 from geometry_msgs.msg import Point
 from sensor_msgs.msg import CompressedImage, Image
@@ -35,9 +33,6 @@ class LineDetectorNode(object):
         self.intermittent_interval = 100
         self.intermittent_counter = 0
 
-        # color correction
-        self.ai = AntiInstagram()
-
         # these will be added if it becomes verbose
         self.pub_edge = None
         self.pub_colorSegment = None
@@ -51,9 +46,8 @@ class LineDetectorNode(object):
         self.pub_image = rospy.Publisher("~image_with_lines", Image, queue_size=1)
        
         # Subscribers
-        self.sub_image = rospy.Subscriber("~image", CompressedImage, self.cbImage, queue_size=1)
-        self.sub_transform = rospy.Subscriber("~transform", AntiInstagramTransform, self.cbTransform, queue_size=1)
-        self.sub_switch = rospy.Subscriber("~switch", BoolStamped, self.cbSwitch, queue_size=1)
+        rospy.Subscriber("~image", CompressedImage, self.cbImage, queue_size=1)
+        rospy.Subscriber("~switch", BoolStamped, self.cbSwitch, queue_size=1)
 
         rospy.loginfo("[%s] Initialized (verbose = %s)." %(self.node_name, self.verbose))
 
@@ -63,7 +57,6 @@ class LineDetectorNode(object):
     def updateParams(self, _event):
         old_verbose = self.verbose
         self.verbose = rospy.get_param('~verbose', True)
-        # self.loginfo('verbose = %r' % self.verbose)
         if self.verbose != old_verbose:
             self.loginfo('Verbose is now %r' % self.verbose)
 
@@ -74,11 +67,9 @@ class LineDetectorNode(object):
             c = rospy.get_param('~detector')
             assert isinstance(c, list) and len(c) == 2, c
         
-#         if str(self.detector_config) != str(c):
             self.loginfo('new detector config: %s' % str(c))
 
             self.detector = instantiate(c[0], c[1])
-#             self.detector_config = c
 
         if self.verbose and self.pub_edge is None:
             self.pub_edge = rospy.Publisher("~edge", Image, queue_size=1)
@@ -99,11 +90,6 @@ class LineDetectorNode(object):
         thread.start()
         # Returns rightaway
 
-    def cbTransform(self, transform_msg):
-        self.ai.shift = transform_msg.s[0:3]
-        self.ai.scale = transform_msg.s[3:6]
-
-        self.loginfo("AntiInstagram transform received")
 
     def loginfo(self, s):
         rospy.loginfo('[%s] %s' % (self.node_name, s))
@@ -158,15 +144,10 @@ class LineDetectorNode(object):
         image_cv = image_cv[self.top_cutoff:,:,:]
 
         tk.completed('resized')
-
-        # apply color correction: AntiInstagram
-        image_cv_corr = self.ai.applyTransform(image_cv)
-        image_cv_corr = cv2.convertScaleAbs(image_cv_corr)
-
         tk.completed('corrected')
 
         # Set the image to be detected
-        self.detector.setImage(image_cv_corr)
+        self.detector.setImage(image_cv)
 
         # Detect lines and normals
 
@@ -207,7 +188,7 @@ class LineDetectorNode(object):
         if self.verbose:
 
             # Draw lines and normals
-            image_with_lines = np.copy(image_cv_corr)
+            image_with_lines = np.copy(image_cv)
             drawLines(image_with_lines, white.lines, (0, 0, 0))
             drawLines(image_with_lines, yellow.lines, (255, 0, 0))
             drawLines(image_with_lines, red.lines, (0, 255, 0))
@@ -221,7 +202,6 @@ class LineDetectorNode(object):
 
             tk.completed('pub_image')
 
-#         if self.verbose:
             colorSegment = color_segment(white.area, red.area, yellow.area) 
             edge_msg_out = self.bridge.cv2_to_imgmsg(self.detector.edges, "mono8")
             colorSegment_msg_out = self.bridge.cv2_to_imgmsg(colorSegment, "bgr8")
@@ -295,10 +275,6 @@ class Stats():
               self.nprocessed, fps(self.nprocessed),
               self.nskipped, fps(self.nskipped), skipped_perc))
         return m
-
-
-
-
 
 if __name__ == '__main__': 
     rospy.init_node('line_detector',anonymous=False)

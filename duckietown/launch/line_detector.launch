@@ -17,5 +17,6 @@
         <remap from="~image" to="camera_node/image/compressed"/>
         <remap from="~transform" to="anti_instagram_node/transform"/>
         <rosparam command="load" file="$(find duckietown)/config/line_detector/config.yaml"/>
+        <param name="verbose" value="false"/>
     </node>
 </launch>

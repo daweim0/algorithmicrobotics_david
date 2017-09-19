@@ -5,6 +5,7 @@
 	<!-- Camera nodes including capture, decompression, rectification, etc. -->
 	<include file="$(find pi_camera)/launch/camera.launch">
 		<arg name="veh" value="$(arg veh)"/>
+        <param name="framerate" value="10"/>
 	</include>
 
 	<!-- Interactive camera calibration -->

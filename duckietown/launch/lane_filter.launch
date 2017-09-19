@@ -9,6 +9,7 @@
 
     <!-- Lane filter -->
     <node ns="$(arg veh)" name="lane_filter_node" pkg="lane_filter" type="lane_filter_node.py" output="screen" required="true">
+        <rosparam command="load" file="$(find duckietown)/config/lane_filter/config.yaml"/>
         <remap from="~segment_list" to="ground_projection/lineseglist_out"/>
         <remap from="~velocity" to="dagu_car/vel_executed"/>
     </node>

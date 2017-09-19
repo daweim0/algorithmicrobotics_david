@@ -24,7 +24,7 @@ class CameraNode(object):
         self.node_name = rospy.get_name()
 
         # Default parameters
-        self.framerate = 10 # Hz
+        self.framerate = rospy.get_param("~framerate",30) # Hz
         self.res_w = 640
         self.res_h = 480
 

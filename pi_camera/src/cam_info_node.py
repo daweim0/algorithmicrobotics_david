@@ -86,7 +86,7 @@ class CamInfoNode(object):
 
     def get_config_path(self, name):
         rospack = rospkg.RosPack()
-        return rospack.get_path('duckietown') + '/config/pi_camera/calib_intrinsic/' + name + ".yaml"  
+        return rospack.get_path('duckietown') + '/config/pi_camera/' + name + ".yaml"  
 
     def on_save_camera_info(self, req):
         # Save camera info (calibration) to a yaml file.

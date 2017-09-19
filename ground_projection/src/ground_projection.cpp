@@ -57,14 +57,14 @@ public:
 
     std::string DT = ros::package::getPath("duckietown");
     // load from homography yaml file
-    h_file_ = DT + "/config/pi_camera/calib_extrinsic/"
+    h_file_ = DT + "/config/ground_projection/"
                  + ros::this_node::getNamespace() + ".yaml";
     std::ifstream fin(h_file_.c_str());
     if (!fin.good())
     {
       ROS_WARN_STREAM("Can't find homography file: " << h_file_ <<
                       " Using default calibration instead.");
-      h_file_ = DT + "/config/pi_camera/calib_extrinsic/default.yaml";
+      h_file_ = DT + "/config/ground_projection/default.yaml";
     }
     ROS_INFO("load from homography yaml file [%s].", h_file_.c_str());
 
@@ -281,7 +281,7 @@ private:
     }
     // Write to yaml file
     std::string wrtie_file_path = ros::package::getPath("duckietown")
-            + "/config/pi_camera/calib_extrinsic"
+            + "/config/ground_projection/"
             + ros::this_node::getNamespace() + ".yaml";
     ROS_INFO("Homography yaml file [%s].", wrtie_file_path.c_str());
     write_homography_yaml(wrtie_file_path, vec_homography);

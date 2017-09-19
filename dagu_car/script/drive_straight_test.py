@@ -12,7 +12,7 @@ from duckietown_msgs.msg import Twist2DStamped
 if __name__ == '__main__':
     rospy.init_node('drive_straight_test', anonymous=False)
 
-    vel = 0.2 # m/s
+    vel = 0.38 # m/s
     mat_len = 23.0 + 5.0/8.0 # inch
     dist = 1*mat_len/39.3701 # m
 
@@ -23,6 +23,6 @@ if __name__ == '__main__':
 
     cmd_go.header.stamp = rospy.Time.now()
     pub.publish(cmd_go)
-    rospy.sleep(dist/vel)
+    rospy.sleep(1.2*dist/vel) # fudge factor
     cmd_stop.header.stamp = rospy.Time.now()
     pub.publish(cmd_stop)

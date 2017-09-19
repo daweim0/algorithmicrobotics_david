@@ -22,7 +22,7 @@ class KeyboardControl:
         self.node_name = "TODO"
 
         # Speed settings
-        self.lin_vel = 0.2
+        self.lin_vel = 0.38
         self.ang_vel = 1.0
         self.print_vel()
         # Current movement

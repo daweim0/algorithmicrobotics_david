@@ -22,6 +22,7 @@ add_message_files(
   Pose2DStamped.msg
   Segment.msg
   SegmentList.msg
+  StopLineReading.msg
   Twist2DStamped.msg
   Vector2D.msg
   WheelSpeedsStamped.msg

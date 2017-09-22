@@ -10,7 +10,7 @@
     <!-- Line detector -->
     <node ns="$(arg veh)" name="line_detector_node" pkg="line_detector" type="line_detector_node.py" output="screen" required="true">
         <remap from="~image" to="camera_node/image/compressed"/>
-        <rosparam command="load" file="$(find duckietown)/config/line_detector/config.yaml"/>
+        <rosparam command="load" file="$(find line_detector)/config/params.yaml"/>
         <param name="verbose" value="false"/>
     </node>
 </launch>

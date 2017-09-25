@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="veh" default="pi" doc="Name of vehicle."/>
+
+    <!-- Camera nodes including capture, decompression, etc. -->
+    <include file="$(find pi_camera)/launch/camera.launch">
+        <arg name="veh" value="$(arg veh)"/>
+    </include>
+
+    <group ns="$(arg veh)">
+        <!-- Applies camera calibration to decompressed (raw) images-->
+        <!-- http://wiki.ros.org/image_proc -->
+        <node name="image_proc_node" pkg="image_proc" type="image_proc" output="screen" required="true">
+            <remap from="image_raw" to="camera_node/image/raw"/>
+            <remap from="camera_info" to="camera_node/camera_info"/>
+            <remap from="image_rect_color" to="camera_node/image/rect"/>
+        </node>
+
+        <node name="tag_detector_node" pkg="ar_tags" type="tag_detector_node.py" output="screen" required="true">
+            <remap from="image_rect" to="camera_node/image/rect"/>
+        </node>
+
+        <!-- TODO: Ground projection -->
+    </group>
+</launch>

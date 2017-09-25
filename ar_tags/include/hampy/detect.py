@@ -15,9 +15,9 @@ def detect_markers(img, marker_ids=None):
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
     edges = cv2.Canny(gray, 10, 100)
-    _, contours, _ = cv2.findContours(edges.copy(),
-                                      cv2.RETR_TREE,
-                                      cv2.CHAIN_APPROX_NONE)
+    contours, _ = cv2.findContours(edges.copy(),
+                                   cv2.RETR_TREE,
+                                   cv2.CHAIN_APPROX_NONE)
 
     # We only keep the big enough contours
     min_area = width * height * .01

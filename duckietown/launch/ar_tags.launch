@@ -17,7 +17,7 @@
         </node>
 
         <node name="tag_detector_node" pkg="ar_tags" type="tag_detector_node.py" output="screen" required="true">
-            <remap from="image_rect" to="camera_node/image/rect"/>
+            <remap from="~image_rect" to="camera_node/image/rect"/>
         </node>
 
         <!-- TODO: Ground projection -->

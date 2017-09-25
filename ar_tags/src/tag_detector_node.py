@@ -14,27 +14,34 @@ class TagDetectorNode(object):
     def __init__(self):
         self.node_name = rospy.get_name()
         self.bridge = CvBridge()
+        self.im = None
         
         #self.pub_raw_img = rospy.Publisher("~tags", HammingMarker, queue_size=1)
         rospy.Subscriber("~image_rect", Image, self.on_image, queue_size=1)
 
 
     def on_image(self, msg):
-        img = self.bridge.imgmsg_to_cv2(msg, "mono8")
+        img = self.bridge.imgmsg_to_cv2(msg, "bgr8")
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
+        img[:,:,:] = 255.0*np.round(img[:,:,:]/(510.0*0.5))
+
         markers = detect_markers(img)
+        print len(markers)
 
         for m in markers:
             m.draw_contour(img)
-
-            cv2.putText(img, str(m.id), tuple(int(p) for p in m.center),
-                        cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 3)
-
-        cv2.imshow('live', img)
-        cv2.waitKey(20)
+            print "%d: %s %s" % (m.id, m.center[0], m.center[1])
+        self.im = img
 
 
 if __name__ == '__main__': 
     rospy.init_node('tag_detector_node', anonymous=False)
     node = TagDetectorNode()
-    rospy.spin()
+    while node.im is None:
+        rospy.sleep(0.1)
+    while not rospy.is_shutdown():
+        cv2.imshow('live', node.im)
+        cv2.waitKey(20)
+    #rospy.spin()
 

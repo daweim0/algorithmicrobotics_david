@@ -23,6 +23,7 @@ add_message_files(
   Segment.msg
   SegmentList.msg
   StopLineReading.msg
+  Tag.msg
   Twist2DStamped.msg
   Vector2D.msg
   WheelSpeedsStamped.msg

@@ -6,16 +6,16 @@ from matplotlib.mlab import find
 from .hamming_marker import HammingMarker, marker_size
 from .hamming import decode
 
+# Modified by PCH 2017
 
 
 
-def detect_markers(img, marker_ids=None):
-    width, height, _ = img.shape
+def detect_markers(gray, marker_ids=None):
+    width, height = gray.shape
 
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
     edges = cv2.Canny(gray, 10, 100)
-    contours, _ = cv2.findContours(edges.copy(),
+    contours, _ = cv2.findContours(edges,
                                    cv2.RETR_TREE,
                                    cv2.CHAIN_APPROX_NONE)
 
@@ -42,9 +42,8 @@ def detect_markers(img, marker_ids=None):
         persp_transf = cv2.getPerspectiveTransform(sorted_curve,
                                                    canonical_marker_coords)
 
-        warped_img = cv2.warpPerspective(img, persp_transf,
+        warped_gray = cv2.warpPerspective(gray, persp_transf,
                                          (warped_size, warped_size))
-        warped_gray = cv2.cvtColor(warped_img, cv2.COLOR_BGR2GRAY)
         _, warped_bin = cv2.threshold(warped_gray, 50, 255, cv2.THRESH_BINARY)
 
         marker = warped_bin.reshape([marker_size,

@@ -8,6 +8,8 @@ from cv_bridge import CvBridge
 import cv2
 import numpy as np
 from sensor_msgs.msg import Image
+from geometry_msgs.msg import Point
+from duckietown_msgs.msg import Tag
 from hampy import detect_markers
 
 class TagDetectorNode(object):
@@ -15,8 +17,11 @@ class TagDetectorNode(object):
         self.node_name = rospy.get_name()
         self.bridge = CvBridge()
         self.im = None
-        
-        #self.pub_raw_img = rospy.Publisher("~tags", HammingMarker, queue_size=1)
+
+        h = rospy.get_param("~homography")
+        self.H = np.matrix([h[0:3], h[3:6], h[6:9]])
+
+        self.pub_tags = rospy.Publisher("~tags", Tag, queue_size=1)
         rospy.Subscriber("~image_rect", Image, self.on_image, queue_size=1)
 
 
@@ -27,21 +32,24 @@ class TagDetectorNode(object):
         img[:,:,:] = 255.0*np.round(img[:,:,:]/(510.0*0.5))
 
         markers = detect_markers(img)
-        print len(markers)
 
+        tag = Tag()
+        tag.header.stamp = msg.header.stamp
         for m in markers:
-            m.draw_contour(img)
-            print "%d: %s %s" % (m.id, m.center[0], m.center[1])
-        self.im = img
+            tag.id = m.id
+            tag.point = self.image2ground(m.center)
+            self.pub_tags.publish(tag)
 
+    def image2ground(self, pixel):
+        pt = self.H*np.matrix([[pixel[0]], [pixel[1]], [0]])
+        point = Point()
+        point.x = pt[0]/pt[2];
+        point.y = pt[1]/pt[2];
+        point.z = 0.0;
+        return point
 
 if __name__ == '__main__': 
     rospy.init_node('tag_detector_node', anonymous=False)
     node = TagDetectorNode()
-    while node.im is None:
-        rospy.sleep(0.1)
-    while not rospy.is_shutdown():
-        cv2.imshow('live', node.im)
-        cv2.waitKey(20)
-    #rospy.spin()
+    rospy.spin()
 

@@ -4,6 +4,7 @@ project(ar_tags)
 find_package(catkin REQUIRED COMPONENTS
   rospy
   sensor_msgs
+  geometry_msgs
 )
 
 catkin_python_setup()

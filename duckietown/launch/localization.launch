@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="veh" default="pi" doc="Name of vehicle."/>
+
+    <!-- Camera and AR tag detection -->
+    <include file="$(find duckietown)/launch/ar_tags.launch">
+        <arg name="veh" value="$(arg veh)"/>
+    </include>
+
+    <!-- Wheel driver, car kinematics, and keyboard input -->
+    <include file="$(find duckietown)/launch/keyboard_control.launch">
+        <arg name="veh" value="$(arg veh)"/>
+    </include>
+
+    <!-- Localize the car based on velocity commands and landmarks (tags)-->
+    <node ns="$(arg veh)" name="localization_node" pkg="localization" type="cam_info_node.py" output="screen" required="true">
+        <rosparam command="load" file="$(find localization)/config/landmarks.yaml"/>
+        <remap from="~tags" to="tag_detector_node/tags"/>
+        <remap from="~vel_executed" to="dagu_car/vel_executed"/>
+    </node>
+</launch>

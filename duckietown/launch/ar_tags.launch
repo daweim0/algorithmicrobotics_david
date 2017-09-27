@@ -23,7 +23,9 @@
             <remap from="image_rect_color" to="camera_node/image/rect"/>
         </node>
 
+        <!-- Hamming marker detection -->
         <node name="tag_detector_node" pkg="ar_tags" type="tag_detector_node.py" output="screen" required="true">
+            <!-- Requires ground projection matrix to obtain tag coordinates -->
             <rosparam command="load" file="$(find duckietown)/config/ground_projection/$(arg veh).yaml"/>
             <remap from="~image_rect" to="camera_node/image/rect"/>
         </node>

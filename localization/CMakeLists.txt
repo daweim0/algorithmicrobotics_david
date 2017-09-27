@@ -4,6 +4,7 @@ project(localization)
 find_package(catkin REQUIRED COMPONENTS
   rospy
   duckietown_msgs
+  geometry_msgs
 )
 
 catkin_package()

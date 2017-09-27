@@ -13,7 +13,7 @@
     </include>
 
     <!-- Localize the car based on velocity commands and landmarks (tags)-->
-    <node ns="$(arg veh)" name="localization_node" pkg="localization" type="cam_info_node.py" output="screen" required="true">
+    <node ns="$(arg veh)" name="localization_node" pkg="localization" type="localization_node.py" output="screen" required="true">
         <rosparam command="load" file="$(find localization)/config/landmarks.yaml"/>
         <remap from="~tags" to="tag_detector_node/tags"/>
         <remap from="~vel_executed" to="dagu_car/vel_executed"/>

@@ -16,7 +16,6 @@ class TagDetectorNode(object):
     def __init__(self):
         self.node_name = rospy.get_name()
         self.bridge = CvBridge()
-        self.im = None
 
         h = rospy.get_param("~homography")
         self.H = np.matrix([h[0:3], h[3:6], h[6:9]])
@@ -28,8 +27,7 @@ class TagDetectorNode(object):
     def on_image(self, msg):
         img = self.bridge.imgmsg_to_cv2(msg, "bgr8")
         img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
-        img[:,:,:] = 255.0*np.round(img[:,:,:]/(510.0*0.5))
+        _, img = cv2.threshold(img, 127, 255, cv2.THRESH_BINARY)
 
         markers = detect_markers(img)
 
@@ -41,7 +39,7 @@ class TagDetectorNode(object):
             self.pub_tags.publish(tag)
 
     def image2ground(self, pixel):
-        pt = self.H*np.matrix([[pixel[0]], [pixel[1]], [0]])
+        pt = self.H*np.matrix([[pixel[0]], [pixel[1]], [1]])
         point = Point()
         point.x = pt[0]/pt[2];
         point.y = pt[1]/pt[2];
@@ -52,4 +50,3 @@ if __name__ == '__main__':
     rospy.init_node('tag_detector_node', anonymous=False)
     node = TagDetectorNode()
     rospy.spin()
-

@@ -26,7 +26,7 @@ class GroundProjectionTest:
     self.th_mean_sq_dist = 0.03**2 # 3cm error bound
 
   def get_image_topic_name(self, veh):
-    image_topic_name = veh + "/camera_node/image_rect"
+    image_topic_name = veh + "/camera_node/image/rect"
     try:
       rospy.wait_for_message(image_topic_name, Image, timeout=3)
       return image_topic_name
@@ -135,7 +135,7 @@ if __name__ == "__main__":
 
   rospy.init_node("test_projection")
 
-  veh = rospy.get_param("~veh", "porsche911")
+  veh = rospy.get_param("~veh", "pi")
   print('Using vehicle name %r.' % veh)
   veh = "/" + veh
   gpt = GroundProjectionTest(veh)

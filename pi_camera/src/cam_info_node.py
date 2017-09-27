@@ -10,7 +10,7 @@ Publications
     ~camera_info (CameraInfo)
 
 Subscriptions
-    ~compressed_image (CompressedImage)
+    ~image (CompressedImage or Image)
 
 Services (advertised)
     ~set_camera_info (SetCameraInfo)
@@ -19,7 +19,7 @@ Services (advertised)
 import rospy
 import rospkg
 import yaml
-from sensor_msgs.msg import CameraInfo, CompressedImage
+from sensor_msgs.msg import CameraInfo, CompressedImage, Image
 from sensor_msgs.srv import SetCameraInfo, SetCameraInfoResponse
 import os.path
 
@@ -36,7 +36,10 @@ class CamInfoNode(object):
 
         # Publish info on camera_info each time an image is received on compressed_image
         self.pub_cam_info = rospy.Publisher("~camera_info", CameraInfo, queue_size=1)
-        rospy.Subscriber("~compressed_image", CompressedImage, self.on_image, queue_size=1)
+        if rospy.get_param("~raw", False):
+            rospy.Subscriber("~image", Image, self.on_image, queue_size=1)
+        else:
+            rospy.Subscriber("~image", CompressedImage, self.on_image, queue_size=1)
     
         # Create service to save camera calibration
         rospy.Service("~set_camera_info", SetCameraInfo, self.on_save_camera_info)
@@ -86,7 +89,7 @@ class CamInfoNode(object):
 
     def get_config_path(self, name):
         rospack = rospkg.RosPack()
-        return rospack.get_path('duckietown') + '/config/pi_camera/calib_intrinsic/' + name + ".yaml"  
+        return rospack.get_path('duckietown') + '/config/pi_camera/' + name + ".yaml"  
 
     def on_save_camera_info(self, req):
         # Save camera info (calibration) to a yaml file.

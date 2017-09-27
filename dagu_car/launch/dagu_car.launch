@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="veh" default="pi" doc="Name of vehicle."/>
+
+    <group ns="$(arg veh)">
+        <!-- Converts car velocities to wheel speeds (and vice versa) -->
+        <node name="kinematics_node" pkg="dagu_car" type="kinematics_node.py" output="screen" required="true">
+            <remap from="~car_vel_in" to="dagu_car/vel_cmd"/>
+            <remap from="~car_vel_out" to="dagu_car/vel_executed"/>
+        </node>
+
+        <!-- Drives motors based on target wheel speeds -->
+        <node name="wheels_driver_node" pkg="dagu_car" type="wheels_driver_node.py" output="screen" required="true">
+            <remap from="~wheels_cmd" to="kinematics_node/wheel_speeds_out"/>
+            <remap from="~wheels_cmd_executed" to="kinematics_node/wheel_speeds_in"/>
+        </node>
+    </group>
+</launch>

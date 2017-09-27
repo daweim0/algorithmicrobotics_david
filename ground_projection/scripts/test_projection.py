@@ -30,7 +30,7 @@ def mouse_cb(event, x, y, flags, param):
     print "ground coordinate: (%f, %f, %f)" % (gp.x, gp.y, gp.z)
 
 def get_image_topic_name(veh):
-  image_topic_name = veh + "/camera_node/image_rect"
+  image_topic_name = veh + "/camera_node/image/rect"
   try:
     rospy.wait_for_message(image_topic_name, Image, timeout=3)
     return image_topic_name

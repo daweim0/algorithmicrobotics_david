@@ -17,12 +17,13 @@ find_package(catkin REQUIRED COMPONENTS
 add_message_files(
   FILES
   BoolStamped.msg
-  CarControl.msg
+  LanePose.msg
   Pixel.msg
   Pose2DStamped.msg
   Segment.msg
   SegmentList.msg
-  Trajectory.msg
+  StopLineReading.msg
+  Tag.msg
   Twist2DStamped.msg
   Vector2D.msg
   WheelSpeedsStamped.msg

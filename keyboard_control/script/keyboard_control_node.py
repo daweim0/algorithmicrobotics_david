@@ -14,12 +14,15 @@ Description: Publish car velocity commands based on keyboard input.
 """
 
 # TODO: include rospy
+import rospy
 # TODO: include any msgs you use
+from duckietown_msgs.msg import WheelSpeedsStamped, Twist2DStamped
 import sys, termios
 
 class KeyboardControl:
     def __init__(self):
-        self.node_name = "TODO"
+        self.node_name = rospy.get_name()
+        print "hi 1"
 
         # Speed settings
         self.lin_vel = 0.2
@@ -30,6 +33,9 @@ class KeyboardControl:
         self.turn = 0
 
         # TODO: ROS setup
+        self.pub_vel = rospy.Publisher("~car_vel_cmd", Twist2DStamped, queue_size=1)
+
+        print "hi 2"
 
         # Disable input echoing and line buffering
         self.attr = termios.tcgetattr(sys.stdin)
@@ -78,18 +84,24 @@ class KeyboardControl:
         omega = self.turn * self.ang_vel
 
         # TODO: Publish the velocity command
+        msg_vel = Twist2DStamped()
+        msg_vel.v = v
+        msg_vel.omega = omega
+        self.pub_vel.publish(msg_vel)
+        print "published velocity"
+
 
     def print_vel(self):
         print "[%s] Speed settings:\t%s\t%s" % (self.node_name, self.lin_vel, self.ang_vel)
 
 if __name__ == '__main__':
     # TODO: ROS node init
-
+    rospy.init_node('keyboard_reader', anonymous=True)
     # Store original terminal settings
     orig_attr = termios.tcgetattr(sys.stdin)
     try:
         node = KeyboardControl()
-        while (True): # TODO: should only loop if the ROS node is still running
+        while (not rospy.is_shutdown()): # TODO: should only loop if the ROS node is still running
             ch = sys.stdin.read(1)
             if (ch != ''):
                 node.process_key(ord(ch))

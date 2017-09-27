@@ -3,6 +3,7 @@ project(keyboard_control)
 
 find_package(catkin REQUIRED COMPONENTS
   # TODO: add dependencies
+rospy
 )
 
 catkin_package()

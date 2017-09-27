@@ -31,6 +31,7 @@ import os.path
 
 class KinematicsNode(object):
     def __init__(self):
+        print "starting kinematics node __init__"
         # Get node name and vehicle name
         self.node_name = rospy.get_name()
         self.veh_name = self.node_name.split("/")[1]
@@ -51,11 +52,12 @@ class KinematicsNode(object):
         rospy.Service("~save_params", Empty, self.on_save_params)
 
         # Inverse kinematics
-        rospy.Subscriber("~car_vel_in", Twist2DStamped, self.inverse_kinematics, queue_size=1)
+        print "about to subscribe to topics"
+        rospy.Subscriber("car_vel_in", Twist2DStamped, self.inverse_kinematics, queue_size=1)
         self.pub_wheels = rospy.Publisher("~wheel_speeds_out", WheelSpeedsStamped, queue_size=1)
 
         # Forward kinematics
-        rospy.Subscriber("~wheel_speeds_in", WheelSpeedsStamped, self.forward_kinematics, queue_size=1)
+        rospy.Subscriber("wheel_speeds_in", WheelSpeedsStamped, self.forward_kinematics, queue_size=1)
         self.pub_vel = rospy.Publisher("~car_vel_out", Twist2DStamped, queue_size=1)
 
         rospy.loginfo("[%s] Initialized.", self.node_name)
@@ -153,6 +155,7 @@ class KinematicsNode(object):
         """
         Convert wheel speeds to car linear and angular velocities.
         """
+        print "forward_kinematics called"
         # Adjust k by gain and trim
         k_r_inv = (self.gain + self.trim) / self.k
         k_l_inv = (self.gain - self.trim) / self.k
@@ -176,6 +179,7 @@ class KinematicsNode(object):
         """
         Convert car linear and angular velocities to wheel speeds.
         """
+        print "\t\tkinematics node got message"
         # Adjust k by gain and trim
         k_r_inv = (self.gain + self.trim) / self.k
         k_l_inv = (self.gain - self.trim) / self.k
@@ -200,6 +204,7 @@ class KinematicsNode(object):
         self.pub_wheels.publish(msg_wheels)
 
 if __name__ == '__main__':
+    print "kinematics node starting"
     rospy.init_node('kinematics_node', anonymous=False)
     KinematicsNode()
     rospy.spin()

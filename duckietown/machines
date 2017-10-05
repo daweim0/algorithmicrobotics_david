@@ -1,4 +1,4 @@
 <launch>
-    <machine name="pi"  address="129.161.82.209" env-loader="$(find duckietown)//env.sh"/>
+    <machine name="pi"  address="129.161.82.209" env-loader="$(find duckietown)/env.sh"/>
 </launch>
 

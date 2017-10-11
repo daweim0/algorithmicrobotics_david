@@ -2,32 +2,8 @@
 <launch>
     <arg name="veh" default="pi" doc="Name of vehicle."/>
 
-    <!-- Camera nodes including capture, decompression, etc. -->
-    <include file="$(find pi_camera)/launch/camera.launch">
-        <arg name="veh" value="$(arg veh)"/>
-    </include>
-
-    <group ns="$(arg veh)">
-        <!-- Image_proc (below) requires camera info synchronized to the raw images -->
-        <node name="raw_info_node" pkg="pi_camera" type="cam_info_node.py" output="screen" required="true">
-            <param name="raw" value="True" />
-            <remap from="~image" to="camera_node/image/raw"/>
-            <remap from="~camera_info" to="camera_node/raw_camera_info"/>
-        </node>
-
-        <!-- Applies camera calibration to decompressed (raw) images-->
-        <!-- http://wiki.ros.org/image_proc -->
-        <node name="image_proc_node" pkg="image_proc" type="image_proc" output="screen" required="true">
-            <remap from="image_raw" to="camera_node/image/raw"/>
-            <remap from="camera_info" to="camera_node/raw_camera_info"/>
-            <remap from="image_rect_color" to="camera_node/image/rect"/>
-        </node>
-
-        <!-- Hamming marker detection -->
-        <node name="tag_detector_node" pkg="ar_tags" type="tag_detector_node.py" output="screen" required="true">
-            <!-- Requires ground projection matrix to obtain tag coordinates -->
-            <rosparam command="load" file="$(find duckietown)/config/ground_projection/$(arg veh).yaml"/>
-            <remap from="~image_rect" to="camera_node/image/rect"/>
-        </node>
-    </group>
+    <node ns="$(arg veh)" name="tag_node" pkg="ar_tags" type="tag_node.py" output="screen" required="true">
+        <!-- Requires ground projection matrix to obtain tag coordinates -->
+        <rosparam command="load" file="$(find duckietown)/config/ground_projection/$(arg veh).yaml"/>
+    </node>
 </launch>

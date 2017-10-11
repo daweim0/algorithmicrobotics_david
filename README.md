@@ -37,7 +37,6 @@ Common code for class. Currently many of the packages are from the duckietown/So
     * launch/**camera.launch** - starts the camera nodes and remaps topics
     * src/**cam_info_node.py** - publishes camera calibration info each time an image is received
     * src/**camera_node.py** - publishes compressed camera images
-    * src/**decoder_node.py** - decompresses camera images
 
 ### Environment ###
 

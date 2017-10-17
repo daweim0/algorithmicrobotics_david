@@ -5,7 +5,8 @@
     <group ns="$(arg veh)">
         <!-- Converts car velocities to wheel speeds (and vice versa) -->
         <node name="kinematics_node" pkg="dagu_car" type="kinematics_node.py" output="screen" required="true">
-            <remap from="~car_vel_in" to="dagu_car/vel_cmd"/>
+<!-- drive_striaght_test.py publishes to /pi/dagu_car/vel_cmd, but this file orrigionally remaped ~car_vel_in to /dagu_car/vel_cmd. I had to add /pi on to get it to work. -->
+            <remap from="~car_vel_in" to="/pi/dagu_car/vel_cmd"/>
             <remap from="~car_vel_out" to="dagu_car/vel_executed"/>
         </node>
 

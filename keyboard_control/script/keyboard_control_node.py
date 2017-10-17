@@ -22,7 +22,6 @@ import sys, termios
 class KeyboardControl:
     def __init__(self):
         self.node_name = rospy.get_name()
-        print "hi 1"
 
         # Speed settings
         self.lin_vel = 0.38
@@ -33,9 +32,8 @@ class KeyboardControl:
         self.turn = 0
 
         # TODO: ROS setup
+        # Create a publisher (to send velocity commands to the kinematics node)
         self.pub_vel = rospy.Publisher("~car_vel_cmd", Twist2DStamped, queue_size=1)
-
-        print "hi 2"
 
         # Disable input echoing and line buffering
         self.attr = termios.tcgetattr(sys.stdin)

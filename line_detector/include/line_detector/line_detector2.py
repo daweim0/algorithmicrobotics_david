@@ -8,6 +8,7 @@ from .parameters import Configurable
 class LineDetector2Dense(Configurable, LineDetectorInterface):
     def __init__(self, configuration):
         # Images to be processed
+
         self.bgr = np.empty(0)
         self.hsv = np.empty(0)
         self.edges = np.empty(0)

@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="veh" default="pi" doc="Name of vehicle."/>
+
+    <group ns="$(arg veh)">
+        <!-- Publishes target car velocities -->
+        <node name="keyboard_control_node" pkg="keyboard_control" type="keyboard_control_node.py" output="screen" required="true">
+            <remap from="~car_vel_cmd" to="car_vel_cmd"/>
+        </node>
+
+        <!-- Converts car velocities to wheel speeds (and vice versa) -->
+        <node name="kinematics_node" pkg="dagu_car" type="kinematics_node.py" output="screen" required="true">
+<!-- The following remap tag had to be modified (the publisher and subscriber appeared to be looking in different namspaces) -->
+            <remap from="~car_vel_in" to="car_vel_cmd"/>
+            <remap from="kinematics_node/wheel_speeds_out" to="wheels_cmd"/>
+        </node>
+
+        <!-- Drives motors based on target wheel speeds -->
+        <node name="wheels_driver_node" pkg="dagu_car" type="wheels_driver_node.py" output="screen" required="true">
+            <remap from="wheels_driver_node/wheels_cmd" to="wheels_cmd"/>
+        </node>
+    </group>
+</launch>

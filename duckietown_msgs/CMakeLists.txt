@@ -27,6 +27,8 @@ add_message_files(
   Twist2DStamped.msg
   Vector2D.msg
   WheelSpeedsStamped.msg
+  AntiInstagramHealth.msg
+  AntiInstagramTransform.msg
 )
 
 ## Generate services in the 'srv' folder

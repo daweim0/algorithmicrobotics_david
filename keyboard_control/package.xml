@@ -9,9 +9,9 @@
 
   <license>GPLv2</license>
 
+<!-- the follwoing three lines were added. There didn't turn out to be any build depenancies (since it's all python) -->
   <buildtool_depend>catkin</buildtool_depend>
   <run_depend>rospy</run_depend>
   <run_depend>duckietown_msgs</run_depend>
-  <!-- TODO: add _build and _run dependencies -->
 </package>
 

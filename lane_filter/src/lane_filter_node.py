@@ -21,6 +21,7 @@ class LaneFilterNode(object):
         Outputs: LanePose - the d (lateral displacement) and phi (relative angle) 
         of the car in the lane
         
+        
         For more info on algorithm and parameters please refer to the google doc:
          https://drive.google.com/open?id=0B49dGT7ubfmSX1k5ZVN1dEU4M2M
 

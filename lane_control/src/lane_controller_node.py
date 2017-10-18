@@ -11,18 +11,21 @@ enable=True
 class lane_controll_node:
 	def __init__(self):
 		self.target_v = 0.25
-		self.target_d = -0.10
+		self.target_d = -0.00
 		self.target_phi = 0.00
 		self.kh = -4.0
 #		self.kh = 0.0
 		self.khh = -0.0
 		self.kd = -2.0
+		self.in_lane_kd = -0.2
 #		self.kd = 0.0
 
-		self.d_integral = 0.25
+		self.d_integral = 0.5
 		self.d_running_integral = 0.0
-		self.trim = 0.0
+		self.trim = -0.025
 		self.max_angle_deviation = 0.15
+		self.acceptable_d = 0.08
+		self.in_lane_d_scalar = 0.1
 		
 		self.prev_angle = 0.0
 	
@@ -37,7 +40,12 @@ class lane_controll_node:
 
 
 	def recieve_pose(self, pose_msg):
-		# filtering
+		# filteringr
+
+		if abs(pose_msg.d - self.target_d) > self.acceptable_d:
+			pose_msg.d = math.copysign(pose_msg.d - self.target_d, self.acceptable_d) + self.target_d
+		else:
+			pose_msg.d = (pose_msg.d - self.target_d) * self.in_lane_d_scalar + self.target_d
 		self.d_running_integral = self.d_integral*pose_msg.d + (1-self.d_integral) * self.d_running_integral
 		offset = self.d_running_integral
 		angle = pose_msg.phi
@@ -118,9 +126,11 @@ class lane_controll_node:
 			self.kd = req.value
 		return
 
+		
 def map_to(x, in_min, in_max, out_min, out_max):
 	return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
 
+	
 def min(a, b):
 	if a > b:
 		return b
@@ -128,9 +138,7 @@ def min(a, b):
 
 
 if __name__ == "__main__":
-	print "hi1"
 	rospy.init_node("lane_controller", anonymous=False)
-	print "hi2"
 	lane_controll_node()
 	rospy.spin()
 

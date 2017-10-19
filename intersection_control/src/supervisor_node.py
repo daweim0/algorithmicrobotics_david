@@ -8,9 +8,12 @@ from duckietown_msgs.msg import SegmentList, Segment, BoolStamped, StopLineReadi
 from duckietown_msgs.msg import LanePose , Twist2DStamped
 import time
 
-# the at stop sign messages seem to come in pairs so it will try to do two turns 
-# when there is only one stop sign. This makes it disregard the second stop sign message
+# The recieve_stop_sign topic seem to send multiple messages each time a stop line is reached. supervisor_node will
+# disregard any messages from the recieve_stop_sign topic that comes less than min_turn_cooldown after another message.
 min_turn_cooldown = 0.05
+
+# used when trying to straighten out in front of a stop sign
+straighten_before_turn = False  # The straightening feature hurts more than it helps right now, so it's turned off.
 acceptable_turn_angle = 0.05
 kpw = -0.125
 kIw = -0.125/2
@@ -33,10 +36,8 @@ class lane_controll_node:
 		
 		# publish to ik node
 		self.motor_pub = rospy.Publisher("~twist2d_out", Twist2DStamped, queue_size=1)
-		
-		# set up service to change kh
-		rospy.Service("/set_k", SetParam, self.on_set_param)
-		
+
+
 		self.in_turn = False
 		self.straightening = False
 		
@@ -45,45 +46,42 @@ class lane_controll_node:
 
 
 	def recieve_stop_line(self, msg):
+		# first decide whether this stop sign message is a duplicate (we already stopped at this stop sign)
 		if msg.data == True and time.clock() - self.last_turn_time > min_turn_cooldown:
+
+			#stop the duckiebot
 			self.in_turn = True
 			stop_msg = Twist2DStamped()
 			stop_msg.v = 0
 			stop_msg.omega = 0
 			self.motor_pub.publish(stop_msg)
-			
-			last_angle = 100
-			
-			# straighten out the duckiebot
-			start_time = time.clock()
-			last_sign_positive = True
-			I = 0
-			while time.clock() - start_time < 0.0:
-				while self.last_input_pose is None:
-					pass
-				last_angle = self.last_input_pose.phi
-				I += last_angle
-				self.last_input_pose = None
-				
-#				if last_angle > 0:
-#					current_sign_positive = True
-#				else:
-#					current_sign_positive = False
-#				if current_sign_positive != last_sign_positive:
-#					I = 0.0
-#				last_sign_positive = current_sign_positive
 
-				if abs(last_angle) < acceptable_turn_angle:
-					I = 0.0
-				
-				turn_msg = Twist2DStamped()
-				turn_msg.v = 0
-				turn_msg.omega = last_angle * kpw + I * kIw
-				print "turning command:", last_angle, I, turn_msg.omega
-				self.motor_pub.publish(turn_msg)
-		
-			self.motor_pub.publish(stop_msg)
-			
+			# straighten out the duckiebot
+			if straighten_before_turn:
+				last_angle = 100
+				start_time = time.clock()
+				last_sign_positive = True
+				I = 0
+				while time.clock() - start_time < 0.0:
+					while self.last_input_pose is None:
+						pass
+					last_angle = self.last_input_pose.phi
+					I += last_angle
+					self.last_input_pose = None
+
+					# set the integral term to zero if the duckiebot is straight (to prevent overshooting)
+					if abs(last_angle) < acceptable_turn_angle:
+						I = 0.0
+
+					turn_msg = Twist2DStamped()
+					turn_msg.v = 0
+					turn_msg.omega = last_angle * kpw + I * kIw
+					print "turning command:", last_angle, I, turn_msg.omega
+					self.motor_pub.publish(turn_msg)
+
+				self.motor_pub.publish(stop_msg)
+
+			# get user input
 			command = raw_input("command (f, l, r):")
 			if command == "f":
 				print "f"
@@ -98,8 +96,8 @@ class lane_controll_node:
 				print "incorrect command"
 				self.in_turn = False
 				return
-			print maneuver
-						
+
+			# execute the maneuver: (which is a lsit of durations and twist2d messages)
 			for command in maneuver:
 				msg = Twist2DStamped()
 				msg.v = command[1]
@@ -111,29 +109,21 @@ class lane_controll_node:
 					pass
 			self.motor_pub.publish(stop_msg)
 			self.last_turn_time = time.clock()
-		
+
+		# stop intercepting messages going to the in-lane driving controller
 		self.in_turn = False
 		
-
+	# intercept lane pose messages, copy them, and send them to the in-lane controller.
 	def recieve_pose(self, pose):
 		self.last_input_pose = pose
+		# intercept data going to the in-lane driving controller if we're in a turn right now
 		if not self.in_turn:
 			self.controller_pub.publish(pose)
 		
-		
+	# forward twist messages from the in-lane controller to the kinematics node
 	def recieveTwist(self, msg):
 		if not self.in_turn:
 			self.motor_pub.publish(msg)
-
-		
-	def on_set_param(self, req):
-		if req.name == "target_v":
-			self.target_v = req.value
-		elif req.name == "kh":	
-			self.kh = req.value
-		elif req.name == "kd":	
-			self.kd = req.value
-		return
 
 
 if __name__ == "__main__":

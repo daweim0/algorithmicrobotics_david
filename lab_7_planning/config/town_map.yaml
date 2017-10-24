@@ -1,0 +1,30 @@
+#
+# XXXX/   seg1     \        /\
+# XXX/   ________   \      /  \
+# XX/   /  seg2  \   \      ||
+# X/   /   ____   \   \     ||  North
+# |   | ^ |XXXX|   | ^ |
+# |   | | |XXXX|   | | |
+# |___|   |XXXX|___|   |
+# |        |seg3       |
+# |        |___        |
+# |        seg4|
+# |    ___ ____|    ___|
+# |   |   |XXXX|   |   |
+# |   |   |XXXX|   |   |
+# |   | ^ |XXXX|   | ^ |
+# |   | | |XXXX|   | | |
+# |   |   |XXXX|   |   |
+# |   |   |XXXX|   |   |
+# X\   \   seg5    /   /
+# XX\   \_________/   /X
+# XXX\     seg6      /XX
+# XXXX\_____________/XXX
+
+# format: [left turn, straight, right turn]
+"seg1": ["seg4", "seg6", ""]
+"seg2": ["", "seg5", "seg3"]
+"seg3": ["seg6", "", "seg2"]
+"seg4": ["seg1", "", "seg5"]
+"seg5": ["", "seg2", "seg4"]
+"seg6": ["seg3", "seg1", ""]

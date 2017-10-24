@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="veh" default="pi" doc="Name of vehicle."/>
+
+    <!-- Kinematics and wheel commands -->
+    <include file="$(find dagu_car)/launch/dagu_car.launch">
+        <arg name="veh" value="$(arg veh)"/>
+    </include>
+
+    <!-- Camera, line detector, ground projection, and lane filter -->
+    <include file="$(find duckietown)/launch/lane_filter.launch">
+        <arg name="veh" value="$(arg veh)"/>
+    </include>
+
+    <!-- Lane controller -->
+    <node ns="$(arg veh)" name="lane_controller_node" pkg="lane_control" type="lane_controller_node.py" output="screen" required="true">
+        <remap from="~lane_pose" to="supervisor/lane_pose"/>
+        <remap from="~car_cmd" to="supervisor/twist2d_in"/>
+    </node>
+	
+	<!-- Stop line detector -->
+	<node ns="$(arg veh)" name="stop_line_filter_node" pkg="lab_7_planning" type="stop_line_filter_node.py" output="screen" required="true">
+        <remap from="~segment_list" to="ground_projection/lineseglist_out"/>
+        <remap from="~at_stop_line" to="stop_line_filter/at_stop_line"/>
+    </node>
+	
+	<!-- supervisor node -->
+	<node ns="$(arg veh)"  name="planner_node" pkg="lab_7_planning" type="planner_node.py" output="screen" required="true">
+        <remap from="~lane_pose_in" to="lane_filter_node/lane_pose"/>
+        <remap from="~lane_pose_out" to="supervisor/lane_pose"/>
+		<remap from="~stop_line_in" to="stop_line_filter/at_stop_line"/>
+		<remap from="~twist2d_in" to="supervisor/twist2d_in"/>
+		<remap from="~twist2d_out" to="dagu_car/vel_cmd"/>
+		<rosparam file="lab_7_planning/config/maneuvers.yaml" />
+		<rosparam file="lab_7_planning/config/town_map.yaml" />
+    </node>
+	
+	
+</launch>

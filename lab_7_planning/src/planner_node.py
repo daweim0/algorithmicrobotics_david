@@ -52,12 +52,15 @@ class lane_controll_node:
 		# first decide whether this stop sign message is a duplicate (we already stopped at this stop sign)
 		if msg.data == True and time.clock() - self.last_turn_time > min_turn_cooldown:
 			#stop the duckiebot
-			self.in_turn = True
 			self.stop_duckie()
-			print "at intersection"			
+			self.in_turn = True
+			print "at intersection"
+
 			if self.current_location == self.target_location:
+				# get a new destination
 				print "At destination"
 				self.target_location = raw_input("Enter a new destination:")
+			# plan a path
 			path = self.plan_path(self.current_location, self.target_location)
 			print "planned path:", path
 			next_maneuver = path[0]
@@ -73,7 +76,13 @@ class lane_controll_node:
 	
 	
 	def plan_path(self, current_location, target_location):
-		# basically breadth first search
+		"""
+		Planns a path from current_location to target_location and returns the sequence of moves required to get there.
+		This function performs a breadth first search, no weights are assigned to edges.
+		:param current_location: the name of the starting node
+		:param target_location: the name of the ending node
+		:return: a list of turns (in the form 'l', 'f', or 'r')
+		"""
 		queue = list()
 		queue.append([current_location, list()])
 		while len(queue) != 0:	
@@ -102,7 +111,12 @@ class lane_controll_node:
 			index = 2
 		return rospy.get_param("~" + current_position)[index]
 	
-	def do_turn(self, command): 
+	def do_turn(self, command):
+		"""
+		Performs a turn. This function assumes that the duckie is at a stop line and straight.
+		:param command: 'l', 'f', or 'r'
+		:return: None
+		"""
 		# straighten out the duckiebot
 		if straighten_before_turn:
 			last_angle = 100
@@ -138,7 +152,7 @@ class lane_controll_node:
 			print "incorrect command"
 			assert False
 
-		# execute the maneuver: (which is a lsit of durations and twist2d messages)
+		# execute a maneuver: (which is a lsit of durations and twist2d messages)
 		for command in maneuver:
 			msg = Twist2DStamped()
 			msg.v = command[1]
@@ -149,20 +163,21 @@ class lane_controll_node:
 			while time.clock() - start_time < command[0]:
 				pass
 		self.stop_duckie()
-		
-	# intercept lane pose messages, copy them, and send them to the in-lane controller.
+
 	def recieve_pose(self, pose):
+		# intercept lane pose messages, copy them, and send them to the in-lane controller.
 		self.last_input_pose = pose
 		# intercept data going to the in-lane driving controller if we're in a turn right now
 		if not self.in_turn:
 			self.controller_pub.publish(pose)
-		
-	# forward twist messages from the in-lane controller to the kinematics node
+
 	def recieveTwist(self, msg):
+		# forward twist messages from the in-lane controller to the kinematics node
 		if not self.in_turn:
 			self.motor_pub.publish(msg)
-			
+
 	def stop_duckie(self):
+		# (pretty self-explanatory, set wheel velocity to zero)
 		stop_msg = Twist2DStamped()
 		stop_msg.v = 0
 		stop_msg.omega = 0

@@ -5,27 +5,25 @@ import rospy
 from duckietown_msgs.msg import LanePose, Twist2DStamped
 from duckietown_msgs.srv import SetParam
 
-enable=False
 enable=True
 
 class lane_controll_node:
 	def __init__(self):
-		self.target_v = 0.25
+		self.target_v = 0.25	
 		self.target_d = -0.00
 		self.target_phi = 0.00
 		self.kh = -4.0
 #		self.kh = 0.0
 		self.khh = -0.0
 		self.kd = -2.0
-		self.in_lane_kd = -0.2
 #		self.kd = 0.0
 
 		self.d_integral = 0.5
 		self.d_running_integral = 0.0
 #		self.trim = -0.025
-		self.trim = -0.025
+		self.trim = -0.15
 		self.max_angle_deviation = 0.15
-		self.acceptable_d = 0.08
+		self.acceptable_d = 0.05
 		self.in_lane_d_scalar = 0.1
 		
 		self.prev_angle = 0.0
@@ -50,39 +48,34 @@ class lane_controll_node:
 		self.d_running_integral = self.d_integral*pose_msg.d + (1-self.d_integral) * self.d_running_integral
 		offset = self.d_running_integral
 		angle = pose_msg.phi
-		angle = self.prev_angle + math.copysign(min(math.fabs(angle - self.prev_angle), self.max_angle_deviation), angle - self.prev_angle)
-		angle_derivative = (angle - self.prev_angle) / 0.1  # runs at ~about 10 hz
+#		angle = self.prev_angle + math.copysign(min(math.fabs(angle - self.prev_angle), self.max_angle_deviation), angle - self.prev_angle)
 
 
 		vx = self.target_v
 		w = self.kh * (angle - self.target_phi) + self.kd * (offset - self.target_d)
-		w += self.khh * angle_derivative
 
 		w += self.trim
 		twist = Twist2DStamped()
 		twist.v = vx
 		twist.omega = w
+		twist.header.stamp = pose_msg.header.stamp
 	        if enable:
 		    self.pub.publish(twist)
 	
 		self.prev_angle = angle
 
-#		self.print_data(offset, angle, angle_derivative)
+		self.print_data(offset, angle)
 
 
-	def print_data(self, offset, angle, angle_deriv):
+	def print_data(self, offset, angle):
 		offset_min = 0.3
 		offset_max = -0.3
 		angle_min = 1.3
 		angle_max = -1.3
-		angle_deriv_min = 4
-		angle_deriv_max = -4
 		display_length = 61
-
 
 		offset_index = int(map_to(offset, offset_min, offset_max, 0, display_length))
 		angle_index = int(map_to(angle, angle_min, angle_max, 0, display_length))
-		angle_deriv_index = int(map_to(angle_deriv, angle_deriv_min, angle_deriv_max, display_length/(-2), display_length/2))
 
 		offset_str = ""
 		angle_str =  ""
@@ -99,11 +92,6 @@ class lane_controll_node:
 		offset_str = offset_str + ""
 		angle_str = angle_str + ""
 
-		if angle_deriv_index < 0:
-			angle_deriv_index = 0
-		elif angle_deriv_index > display_length:
-			angle_deriv_index = display_length
-
 #		for i in range(1, abs(angle_deriv_index) + 1):
 #			ind = int(angle_index + math.copysign(i, angle_deriv_index))
 #			if 0 <= angle_index + ind and angle_index + ind < display_length:
@@ -114,7 +102,7 @@ class lane_controll_node:
 
 		print "offset: |" + offset_str + "|"
 		print "angle:  |" + angle_str + "|"
-		print "offset % 2.5f, angle: % 2.5f, angle derivative: % 2.5f" % (offset, angle, angle_deriv)
+		print "offset % 2.5f, angle: % 2.5f" % (offset, angle)
 		print
 
 

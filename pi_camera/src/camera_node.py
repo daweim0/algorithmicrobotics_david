@@ -25,8 +25,8 @@ class CameraNode(object):
 
         # Default parameters
         self.framerate = rospy.get_param("~framerate",30) # Hz
-        self.res_w = 640
-        self.res_h = 480
+        self.res_w = 640/2
+        self.res_h = 480/2
 
         # Setup PiCamera
         self.camera = PiCamera()

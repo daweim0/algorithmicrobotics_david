@@ -19,7 +19,7 @@
     </node>
 	
 	<node ns="$(arg veh)" pkg="rosbag" type="record" name="harness_bag"
-            args="-o /home/david/ws/rosbag_output/bag lane_filter_node/lane_pose dagu_car/vel_cmd kinematics_node/wheel_speeds_in"
+            args="-o /home/david/ws/rosbag_output/bag lane_filter_node/lane_pose dagu_car/vel_cmd dagu_car/vel_executed"
     />
 	
 </launch>

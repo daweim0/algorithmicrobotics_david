@@ -21,9 +21,9 @@ class lane_controll_node:
 		self.d_integral = 0.5
 		self.d_running_integral = 0.0
 #		self.trim = -0.025
-		self.trim = -0.15
+		self.trim = -0.2
 		self.max_angle_deviation = 0.15
-		self.acceptable_d = 0.05
+		self.acceptable_d = 0.08
 		self.in_lane_d_scalar = 0.1
 		
 		self.prev_angle = 0.0

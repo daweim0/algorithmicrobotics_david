@@ -4,7 +4,7 @@
 
     <group ns="$(arg veh)">
         <!-- Publishes jpeg compressed images from the pi camera -->
-        <node name="camera_node" pkg="pi_camera" type="camera_node.py" output="screen" required="true">
+        <node name="camera_node" machine="pi" pkg="pi_camera" type="camera_node.py" output="screen" required="true">
             <remap from="~compressed_image" to="camera_node/image/compressed"/>
         </node>
         

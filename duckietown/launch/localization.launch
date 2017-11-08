@@ -18,4 +18,10 @@
         <remap from="~tags" to="tag_detector_node/tags"/>
         <remap from="~vel_executed" to="dagu_car/vel_executed"/>
     </node>
+
+    <!-- Convert car poses to RViz markers for visualization -->
+    <node ns="$(arg veh)" name="loc_vis_node" pkg="localization" type="loc_vis_node.py" output="screen" required="true">
+        <rosparam command="load" file="$(find localization)/config/landmarks.yaml"/>
+        <remap from="~pose" to="localization_node/pose"/>
+    </node>
 </launch>

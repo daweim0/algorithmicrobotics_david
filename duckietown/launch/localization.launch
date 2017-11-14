@@ -16,7 +16,7 @@
     <node ns="$(arg veh)" name="localization_node" pkg="localization" type="localization_node.py" output="screen" required="true">
         <rosparam command="load" file="$(find localization)/config/landmarks.yaml"/>
         <remap from="~tags" to="tag_detector_node/tags"/>
-        <remap from="~vel_executed" to="dagu_car/vel_executed"/>
+        <remap from="~vel_executed" to="/pi/kinematics_node/car_vel_out"/>
     </node>
 
     <!-- Convert car poses to RViz markers for visualization -->

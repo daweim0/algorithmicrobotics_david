@@ -64,16 +64,16 @@ class KeyboardControl:
     def process_key(self, key):
         if (key == 45): # -
             self.lin_vel -= 0.01
-            self.print_vel()
+#            self.print_vel()
         elif (key == 61): # =
             self.lin_vel += 0.01
-            self.print_vel()
+#            self.print_vel()
         elif (key == 91): # [
             self.ang_vel -= 0.01
-            self.print_vel()
+#            self.print_vel()
         elif (key == 93): # ]
             self.ang_vel += 0.01
-            self.print_vel()
+#            self.print_vel()
         elif (key == 27): # esc
             self.process_arrow_key()
 
@@ -86,7 +86,7 @@ class KeyboardControl:
         msg_vel.v = v
         msg_vel.omega = omega
         self.pub_vel.publish(msg_vel)
-        print "published velocity"
+#        print "published velocity"
 
 
     def print_vel(self):
@@ -96,6 +96,7 @@ if __name__ == '__main__':
     # TODO: ROS node init
     rospy.init_node('keyboard_reader', anonymous=True)
     # Store original terminal settings
+    rospy.spin()
     orig_attr = termios.tcgetattr(sys.stdin)
     try:
         node = KeyboardControl()

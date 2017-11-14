@@ -63,7 +63,7 @@ class LocVisNode(object):
 
         self.pub_marker = rospy.Publisher('~carmrkr', Marker, queue_size=10)
         self.pub_map = rospy.Publisher('~landmrkr', Marker, queue_size=1, latch=True)
-        rospy.Subscriber("~pose", Pose2DStamped, self.on_pose, queue_size=1)
+        rospy.Subscriber("pose", Pose2DStamped, self.on_pose, queue_size=1)
 
         self.pub_map.publish(self.landmrkr)
 

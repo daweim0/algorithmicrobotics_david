@@ -13,6 +13,7 @@
 <!-- The following remap tag had to be modified (the publisher and subscriber appeared to be looking in different namspaces) -->
             <remap from="~car_vel_in" to="car_vel_cmd"/>
             <remap from="kinematics_node/wheel_speeds_out" to="wheels_cmd"/>
+			<remap from="~wheel_speeds_in" to="/pi/wheels_driver_node/wheels_cmd_executed"/>
         </node>
 
         <!-- Drives motors based on target wheel speeds -->

@@ -8,19 +8,35 @@ from .hamming import decode
 
 # Modified by PCH 2017
 
-
+import pdb
 
 def detect_markers(gray, marker_ids=None):
     width, height = gray.shape
 
 
     edges = cv2.Canny(gray, 10, 100)
-    contours, _ = cv2.findContours(edges,
+    try:
+        _, contours, _ = cv2.findContours(edges,
                                    cv2.RETR_TREE,
                                    cv2.CHAIN_APPROX_NONE)
+    except:
+        print "THIS IS A ERROR: falling back on line 23 in ar_tags/include/hampy/detect.py"
+        contours = cv2.findContours(edges,
+                                   cv2.RETR_TREE,
+                                   cv2.CHAIN_APPROX_NONE)
+        print contours
 
+#    pdb.set_trace()
+        
     # We only keep the big enough contours
     min_area = width * height * .01
+#    contours = list()
+#    for c in contours:
+#        try:
+#            if cv2.contourArea(c) > min_area:
+#                contours.append(c)
+#        except:
+#            pass
     contours = [c for c in contours if cv2.contourArea(c) > min_area]
 
     warped_size = 9 * 10
@@ -75,4 +91,6 @@ def detect_markers(gray, marker_ids=None):
     # Remove duplicates
     markers = {m.id: m for m in markers}.values()
 
+    if len(markers) > 0:
+        print "found", len(markers), "markers!"
     return markers

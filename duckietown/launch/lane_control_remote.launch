@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <launch>
-    <arg name="veh" default="pi" doc="Name of vehicle."/>
-
+    <arg name="veh" default="pi" doc="Name of vehicle."/>3
     <include file="$(find duckietown)/machines"/>
 
     <!-- Kinematics and wheel commands -->

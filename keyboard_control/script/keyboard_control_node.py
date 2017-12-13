@@ -18,6 +18,7 @@ import rospy
 # TODO: include any msgs you use
 from duckietown_msgs.msg import WheelSpeedsStamped, Twist2DStamped
 import sys, termios
+import time
 
 class KeyboardControl:
     def __init__(self):
@@ -64,16 +65,16 @@ class KeyboardControl:
     def process_key(self, key):
         if (key == 45): # -
             self.lin_vel -= 0.01
-            self.print_vel()
+#            self.print_vel()
         elif (key == 61): # =
             self.lin_vel += 0.01
-            self.print_vel()
+#            self.print_vel()
         elif (key == 91): # [
             self.ang_vel -= 0.01
-            self.print_vel()
+#            self.print_vel()
         elif (key == 93): # ]
             self.ang_vel += 0.01
-            self.print_vel()
+#            self.print_vel()
         elif (key == 27): # esc
             self.process_arrow_key()
 
@@ -86,7 +87,7 @@ class KeyboardControl:
         msg_vel.v = v
         msg_vel.omega = omega
         self.pub_vel.publish(msg_vel)
-        print "published velocity"
+#        print "published velocity"
 
 
     def print_vel(self):
@@ -95,12 +96,21 @@ class KeyboardControl:
 if __name__ == '__main__':
     # TODO: ROS node init
     rospy.init_node('keyboard_reader', anonymous=True)
+    node = KeyboardControl()
+#    while not rospy.is_shutdown():
+#        node.process_key(66)
+#        time.sleep(0.1)
+#    sys.exit()
+    
     # Store original terminal settings
     orig_attr = termios.tcgetattr(sys.stdin)
+    
     try:
-        node = KeyboardControl()
         while (not rospy.is_shutdown()): # TODO: should only loop if the ROS node is still running
             ch = sys.stdin.read(1)
+            if ch == 'i':
+                termios.tcsetattr(sys.stdin, termios.TCSADRAIN, orig_attr)
+                rospy.spin()
             if (ch != ''):
                 node.process_key(ord(ch))
     finally:

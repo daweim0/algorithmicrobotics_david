@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="veh" default="pi" doc="Name of vehicle."/>
+
+    <include file="$(find duckietown)/machines"/>
+
+    <!-- Kinematics and wheel commands -->
+    <include file="$(find dagu_car)/launch/dagu_car.launch">
+        <arg name="veh" value="$(arg veh)"/>
+    </include>
+
+    <!-- Camera, line detector, ground projection, and lane filter -->
+    <include file="$(find duckietown)/launch/lane_filter.launch">
+        <arg name="veh" value="$(arg veh)"/>
+    </include>
+
+    <!-- Lane controller -->
+    <node ns="$(arg veh)" name="lane_controller_node" pkg="lane_control" type="lane_controller_node.py" output="screen" required="true">
+        <remap from="~lane_pose" to="lane_filter_node/lane_pose"/>
+        <remap from="~car_cmd" to="dagu_car/vel_cmd"/>
+    </node>
+</launch>

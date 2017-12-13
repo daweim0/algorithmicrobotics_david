@@ -11,7 +11,7 @@
         </node>
 
         <!-- Drives motors based on target wheel speeds -->
-        <node name="wheels_driver_node" pkg="dagu_car" type="wheels_driver_node.py" output="screen" required="true">
+        <node name="wheels_driver_node" machine="pi" pkg="dagu_car" type="wheels_driver_node.py" output="screen" required="true">
             <remap from="~wheels_cmd" to="kinematics_node/wheel_speeds_out"/>
             <remap from="~wheels_cmd_executed" to="kinematics_node/wheel_speeds_in"/>
         </node>

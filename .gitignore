@@ -7,3 +7,4 @@
 pi.yaml
 *.csv
 *.bag
+*include/zxing*

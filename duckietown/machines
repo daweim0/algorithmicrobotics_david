@@ -1,4 +1,4 @@
 <launch>
-    <machine name="pi"  address="goose.local" env-loader="$(find duckietown)/env.sh"/>
+    <machine name="pi"  address="goose" env-loader="$(find duckietown)/env.sh"/>
 </launch>
 

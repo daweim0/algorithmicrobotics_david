@@ -3,10 +3,14 @@
     <arg name="veh" default="pi" doc="Name of vehicle."/>
 
     <group ns="$(arg veh)">
+        <rosparam command="load" file="$(find duckietown)/config/pi_camera/pi.yaml"/>
         <!-- Publishes jpeg compressed images from the pi camera -->
         <node name="camera_node" machine="pi" pkg="pi_camera" type="camera_node.py" output="screen" required="true">
-            <remap from="~compressed_image" to="camera_node/image/compressed"/>
+            <remap from="~compressed_image" to="camera_node_pi/image/compressed"/>
         </node>
+
+        <!-- encode the image stream into a compressed format for more effeceint transmission -->
+        <node name="compressor_node" machine="pi" pkg="image_transport" type="republish"  output="screen" required="true" args="compressed in:=camera_node_pi/image/ compressed out:=/pi/camera_node_compressed"/>
         
         <!-- Publishes camera calibration parameters and provides a service to set them -->
         <node name="cam_info_node" pkg="pi_camera" type="cam_info_node.py" output="screen" required="true">
@@ -16,7 +20,7 @@
         </node>
 
         <!-- Decompresses images published from the camera node -->
-        <remap from="camera_node/image" to="camera_node/image/raw"/>
-        <node name="decompresser_node" pkg="image_transport" type="republish"  output="screen" required="true" args="compressed in:=/pi/camera_node/image/ raw out:=/pi/camera_node/image"/>
+        <!-- <remap from="camera_node/image" to="camera_node/image/raw"/> -->
+        <node name="decompresor_node" pkg="image_transport" type="republish"  output="screen" required="true" args="compressed in:=/pi/camera_node_compressed raw out:=/pi/camera_node/image"/>
     </group>
 </launch>

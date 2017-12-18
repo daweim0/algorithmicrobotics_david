@@ -32,16 +32,14 @@ class TagDetectorNode(object):
 
 	self.tag_scanner = zxing.BarCodeReader("/home/david/Documents/14_algorithmic_robotics/src/ar_tags/include/zxing")
 
-
         # Parameters
         h = rospy.get_param("~homography")
         self.H = np.matrix([h[0:3], h[3:6], h[6:9]])
 
         rospy.Subscriber("~image", Image, self.process_tag, queue_size=1, buff_size=2**24)
 
-
     def process_tag(self, image_message):
-        print "startint to read image at time difference", (rospy.get_rostime() - image_message.header.stamp).to_sec()
+        # print "startint to read image at time difference", (rospy.get_rostime() - image_message.header.stamp).to_sec()
         img = self.bridge.imgmsg_to_cv2(image_message, desired_encoding="passthrough")
 
         # grey = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -49,14 +47,14 @@ class TagDetectorNode(object):
 
         # markers = detect_markers(grey)
 
-	
         markers = []
         try:
-            os.remove('/media/ramdisk/duckiebot/artag_image.jpg')
+            os.remove('artag_image.png')
         except:
             pass
-        scipy.misc.imsave('/media/ramdisk/duckiebot/artag_image.jpg', img)
-        markers = self.tag_scanner.decode("/media/ramdisk/duckiebot/artag_image.png")
+        # saving an image to disk seems like it would be slow, but in practice it isn't. (maybe write-caching?)
+        scipy.misc.imsave('artag_image.png', img)
+        markers = self.tag_scanner.decode("artag_image.png")
         # print "markers:", markers, "time delta:", (rospy.get_rostime() - image_message.header.stamp).to_sec()
 
         if markers is not None:

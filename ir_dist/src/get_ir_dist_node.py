@@ -8,8 +8,8 @@ from sensor_msgs.msg import Range
 import RPi.GPIO as GPIO
 import numpy as np
 
-samples_per_message = 10
-publish_rate = 20  # in hz
+samples_per_message = 4
+publish_rate = 30  # in hz
 
 class lane_controll_node:
 	def __init__(self):
@@ -86,7 +86,8 @@ GPIO.setup(SPICLK, GPIO.OUT)
 GPIO.setup(SPICS, GPIO.OUT)
 
 if __name__ == "__main__":
-	rospy.init_node("lane_controller", anonymous=False)
+	rospy.init_node("get_ir_dist_node", anonymous=False)
+        rospy.loginfo("starting ir dist node")
 	lane_controll_node()
 	rospy.spin()
 

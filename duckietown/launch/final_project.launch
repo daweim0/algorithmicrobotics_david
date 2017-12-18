@@ -8,8 +8,13 @@
         <arg name="veh" value="$(arg veh)"/>
     </include>
 
+    <!-- Sharp IR distance sensor -->
+    <node ns="$(arg veh)" machine="pi" name="ir_dist_node" pkg="ir_dist" type="get_ir_dist_node.py" output="screen" required="true">
+        <remap from="~ir_dist" to="ir_dist/dist"/>
+    </node>
+
     <!-- Camera nodes including capture, decompression, rectification, etc. -->
-    <include file="$(find pi_camera)/launch/camera_theora.launch">
+    <include file="$(find pi_camera)/launch/camera_compressed.launch">
         <arg name="veh" value="$(arg veh)"/>
     </include>
 
@@ -21,8 +26,8 @@
     </node>
 
     <!-- planning node -->
-    <node ns="$(arg veh)" name="searcher_node" pkg="final_project" type="searcher.py" output="screen" required="true">
-
+    <node ns="$(arg veh)" machine="pi" name="searcher_node" pkg="final_project" type="searcher.py" output="screen" required="true">
+        <remap from="~dist_in" to="ir_dist/dist"/>
         <remap from="~car_cmd" to="dagu_car/vel_cmd"/>
     </node>
 </launch>

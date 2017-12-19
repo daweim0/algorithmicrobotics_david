@@ -8,3 +8,5 @@ pi.yaml
 *.csv
 *.bag
 *include/zxing*
+*include/jpype*
+*include/pyjnius*

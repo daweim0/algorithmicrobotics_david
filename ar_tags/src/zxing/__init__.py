@@ -33,7 +33,7 @@ class BarCodeReader():
     if try_harder:
       cmd.append("--try_harder")
     if qr_only:
-      cmd.append("--possibleFormats=QR_CODE")
+      cmd.append("--possible_formats=QR_CODE")
 
     libraries = [self.location + "/" + l for l in self.libs]
 

@@ -68,6 +68,7 @@ class lane_controll_node:
 
 
 	def print_data(self, offset, angle):
+		return
 		offset_min = 0.3
 		offset_max = -0.3
 		angle_min = 1.3

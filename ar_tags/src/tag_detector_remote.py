@@ -18,7 +18,20 @@ from cv_bridge import CvBridge, CvBridgeError
 from PIL import Image as PIL_Image
 import scipy.misc
 
-import zxing  # barcode reading library
+import zxing  # py-zxing bindings for the zxing barcode reading library
+
+# using pyjnius to read the zxing library (instead of py-zxing)
+import os
+os.environ['CLASSPATH'] = "/home/david/Documents/14_algorithmic_robotics/src/ar_tags/include/zxing/javase/target/javase-3.3.2-SNAPSHOT.jar:/home/david/Documents/14_algorithmic_robotics/src/ar_tags/include/zxing/core/core.jar"
+os.environ['JAVA_HOME'] = "/usr/lib/jvm/default-java"
+from jnius import autoclass
+
+# ar tag reading library
+from ar_markers import detect_markers
+
+
+USE_JNIUS = True
+USE_AR = False
 
 
 class TagDetectorNode(object):
@@ -30,7 +43,9 @@ class TagDetectorNode(object):
 
         self.pub_tags = rospy.Publisher("~tags", Tag, queue_size=1)
 
-	self.tag_scanner = zxing.BarCodeReader("/home/david/Documents/14_algorithmic_robotics/src/ar_tags/include/zxing")
+        self.tag_scanner = zxing.BarCodeReader("/home/david/Documents/14_algorithmic_robotics/src/ar_tags/include/zxing")
+
+        self.jnius_scanner = autoclass('com.google.zxing.client.j2se.CommandLineRunnerCustom')
 
         # Parameters
         h = rospy.get_param("~homography")
@@ -49,12 +64,18 @@ class TagDetectorNode(object):
 
         markers = []
         try:
-            os.remove('artag_image.png')
+            os.remove('qrcode_image.png')
         except:
             pass
         # saving an image to disk seems like it would be slow, but in practice it isn't. (maybe write-caching?)
-        scipy.misc.imsave('artag_image.png', img)
-        markers = self.tag_scanner.decode("artag_image.png")
+        scipy.misc.imsave('qrcode_image.png', img)
+        if USE_AR:
+            markers = self.read_tag_ar(img)
+        elif USE_JNIUS:
+            markers = self.read_tag_pyjnius('qrcode_image.png')
+        else:
+            markers = self.read_tag_py_zxing('qrcode_image.png')
+            rospy.loginfo("found tags  " + str(markers))
         # print "markers:", markers, "time delta:", (rospy.get_rostime() - image_message.header.stamp).to_sec()
 
         if markers is not None:
@@ -66,10 +87,30 @@ class TagDetectorNode(object):
                 markers = [markers]
             for m in markers:
                 # print "found AR tag", m.data, m.points
-                tag.id = m.data
+                tag.id = hash(m.data) % 2**30  # since id must be an integer
                 # find the approximate center of the tag:
                 tag.point = self.image2ground(np.asarray(m.points, dtype=np.float32).mean(axis=0))
                 self.pub_tags.publish(tag)
+
+
+    def read_tag_ar(self, image):
+        markers = detect_markers(image)
+        if markers is None or len(markers) == 0:
+            return None
+        output = zxing.BarCode("")
+        output.id = markers[0].id
+
+
+    def read_tag_pyjnius(self, file):
+        output = self.jnius_scanner.readFromFileSystem([file])
+        if output == 'null\n':
+            return None
+        # rospy.loginfo("found barcode")
+        return zxing.BarCode(output)
+        
+    
+    def read_tag_py_zxing(self, file):
+        return self.tag_scanner.decode(file, try_harder=True, qr_only=True)
 
 
     def get_config_path(self, name):
@@ -116,7 +157,7 @@ class TagDetectorNode(object):
         rospy.loginfo("[%s] Read calibration file %s" % (self.node_name, file_name))
 
 
-# begin coppied segment from line_detector_node.py
+    # begin coppied segment from line_detector_node.py
     def cbImage(self, image_msg):
         self.processImage(image_msg)
         # # stuff commented out to make debugging easier

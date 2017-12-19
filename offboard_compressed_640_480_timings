@@ -1,0 +1,181 @@
+[goose-0]: ... done launching nodes
+[INFO] [1513706460.664467]: [LineDetectorNode] Verbose is now False
+[INFO] [1513706460.668512]: [LineDetectorNode] new detector config: ['line_detector.LineDetectorHSV', {'configuration': {'hough_max_line_gap': 1, 'dilation_kernel_size': 3, 'hsv_yellow1': [25, 160, 120], 'hsv_yellow2': [75, 255, 255], 'hsv_white1': [0, 0, 150], 'hsv_white2': [180, 75, 255], 'hough_min_line_length': 3, 'hough_threshold': 2, 'canny_thresholds': [80, 200], 'hsv_red4': [180, 255, 255], 'hsv_red1': [0, 140, 100], 'hsv_red3': [165, 140, 100], 'hsv_red2': [15, 255, 255]}}]
+[INFO] [1513706460.677888]: [LineDetectorNode] Initialized (verbose = False).
+[INFO] [1513706461.037581]: [/pi/lane_pose_visualizer_node] Initialzing.
+[INFO] [1513706461.037868]: [/pi/lane_pose_visualizer_node] Vehicle name: pi
+[INFO] [1513706461.041662]: [/pi/lane_pose_visualizer_node] Initialzed.
+[ INFO] [1513706462.329323107]: [/pi/ground_projection] Got camera_info
+[ INFO] [1513706462.332319979]: estimate_homography is ready.
+[ INFO] [1513706462.333363294]: get_ground_coordinate is ready.
+[ INFO] [1513706462.334246503]: get_image_coordinate is ready.
+[INFO] [1513706462.371407]: line_detector_node received first image.
+[INFO] [1513706462.372136]: line_detector_node processing first image.
+[INFO] [1513706462.377472]: [LineDetectorNode]   1:# segments: white   0 yellow   3 red   0
+[INFO] [1513706462.377925]: [LineDetectorNode]   1:
+Latencies:
+               acquired | total latency    25.7 ms | delta wall     None clock     None
+                decoded | total latency    28.3 ms | delta wall   2.6 ms clock   2.7 ms
+                resized | total latency    28.7 ms | delta wall   0.4 ms clock   0.4 ms
+              corrected | total latency    28.8 ms | delta wall   0.0 ms clock   0.0 ms
+               detected | total latency    30.6 ms | delta wall   1.9 ms clock   2.2 ms
+               prepared | total latency    31.1 ms | delta wall   0.5 ms clock   0.6 ms
+          --pub_lines-- | total latency    31.2 ms | delta wall   0.1 ms clock   0.1 ms
+
+[INFO] [1513706462.427694]: [LineDetectorNode]   1:In the last 1.8 s: received 2 (1.1 fps) processed 2 (1.1 fps) skipped 0 (0.0 fps) (0%)
+[INFO] [1513706466.801291]: [LineDetectorNode] 101:# segments: white  28 yellow  16 red   4
+[INFO] [1513706466.801995]: [LineDetectorNode] 101:
+Latencies:
+               acquired | total latency    52.7 ms | delta wall     None clock     None
+                decoded | total latency    54.9 ms | delta wall   2.2 ms clock   2.2 ms
+                resized | total latency    55.0 ms | delta wall   0.1 ms clock   0.1 ms
+              corrected | total latency    55.0 ms | delta wall   0.0 ms clock   0.0 ms
+               detected | total latency    56.7 ms | delta wall   1.7 ms clock   2.3 ms
+               prepared | total latency    57.7 ms | delta wall   0.9 ms clock   1.0 ms
+          --pub_lines-- | total latency    57.9 ms | delta wall   0.3 ms clock   0.3 ms
+
+[INFO] [1513706466.836948]: [LineDetectorNode] 101:In the last 4.4 s: received 100 (22.7 fps) processed 100 (22.7 fps) skipped 0 (0.0 fps) (0%)
+[INFO] [1513706470.860838]: [LineDetectorNode] 201:# segments: white  24 yellow  33 red   1
+[INFO] [1513706470.861702]: [LineDetectorNode] 201:
+Latencies:
+               acquired | total latency    45.1 ms | delta wall     None clock     None
+                decoded | total latency    47.6 ms | delta wall   2.5 ms clock   2.6 ms
+                resized | total latency    47.7 ms | delta wall   0.1 ms clock   0.1 ms
+              corrected | total latency    47.8 ms | delta wall   0.0 ms clock   0.0 ms
+               detected | total latency    49.8 ms | delta wall   2.0 ms clock   2.4 ms
+               prepared | total latency    50.6 ms | delta wall   0.8 ms clock   0.9 ms
+          --pub_lines-- | total latency    51.0 ms | delta wall   0.4 ms clock   0.6 ms
+
+[INFO] [1513706470.888004]: [LineDetectorNode] 201:In the last 4.1 s: received 100 (24.7 fps) processed 100 (24.7 fps) skipped 0 (0.0 fps) (0%)
+[INFO] [1513706474.764719]: [LineDetectorNode] 301:# segments: white  40 yellow  23 red   2
+[INFO] [1513706474.765461]: [LineDetectorNode] 301:
+Latencies:
+               acquired | total latency    51.9 ms | delta wall     None clock     None
+                decoded | total latency    54.8 ms | delta wall   2.9 ms clock   2.9 ms
+                resized | total latency    54.9 ms | delta wall   0.1 ms clock   0.1 ms
+              corrected | total latency    54.9 ms | delta wall   0.0 ms clock   0.0 ms
+               detected | total latency    57.0 ms | delta wall   2.1 ms clock   2.5 ms
+               prepared | total latency    57.9 ms | delta wall   0.9 ms clock   0.9 ms
+          --pub_lines-- | total latency    58.2 ms | delta wall   0.3 ms clock   0.3 ms
+
+[INFO] [1513706474.792898]: [LineDetectorNode] 301:In the last 3.9 s: received 100 (25.6 fps) processed 100 (25.6 fps) skipped 0 (0.0 fps) (0%)
+[INFO] [1513706478.763691]: [LineDetectorNode] 401:# segments: white  17 yellow  19 red   6
+[INFO] [1513706478.764329]: [LineDetectorNode] 401:
+Latencies:
+               acquired | total latency    52.6 ms | delta wall     None clock     None
+                decoded | total latency    55.4 ms | delta wall   2.8 ms clock   2.8 ms
+                resized | total latency    55.5 ms | delta wall   0.1 ms clock   0.1 ms
+              corrected | total latency    55.6 ms | delta wall   0.0 ms clock   0.0 ms
+               detected | total latency    57.5 ms | delta wall   1.9 ms clock   2.4 ms
+               prepared | total latency    58.2 ms | delta wall   0.7 ms clock   0.8 ms
+          --pub_lines-- | total latency    58.4 ms | delta wall   0.2 ms clock   0.2 ms
+
+[INFO] [1513706478.786894]: [LineDetectorNode] 401:In the last 4.0 s: received 100 (25.0 fps) processed 100 (25.0 fps) skipped 0 (0.0 fps) (0%)
+[INFO] [1513706482.709438]: [LineDetectorNode] 501:# segments: white  29 yellow  11 red   9
+[INFO] [1513706482.710285]: [LineDetectorNode] 501:
+Latencies:
+               acquired | total latency    65.7 ms | delta wall     None clock     None
+                decoded | total latency    68.1 ms | delta wall   2.4 ms clock   2.5 ms
+                resized | total latency    68.3 ms | delta wall   0.1 ms clock   0.2 ms
+              corrected | total latency    68.3 ms | delta wall   0.0 ms clock   0.0 ms
+               detected | total latency    70.1 ms | delta wall   1.9 ms clock   2.4 ms
+               prepared | total latency    71.0 ms | delta wall   0.8 ms clock   0.9 ms
+          --pub_lines-- | total latency    71.3 ms | delta wall   0.4 ms clock   0.5 ms
+
+[INFO] [1513706482.743376]: [LineDetectorNode] 501:In the last 4.0 s: received 100 (25.3 fps) processed 100 (25.3 fps) skipped 0 (0.0 fps) (0%)
+[INFO] [1513706486.444615]: [LineDetectorNode] 601:# segments: white  15 yellow   9 red   3
+[INFO] [1513706486.445232]: [LineDetectorNode] 601:
+Latencies:
+               acquired | total latency    39.8 ms | delta wall     None clock     None
+                decoded | total latency    42.6 ms | delta wall   2.8 ms clock   2.8 ms
+                resized | total latency    42.7 ms | delta wall   0.1 ms clock   0.1 ms
+              corrected | total latency    42.7 ms | delta wall   0.0 ms clock   0.0 ms
+               detected | total latency    44.6 ms | delta wall   1.8 ms clock   2.4 ms
+               prepared | total latency    45.2 ms | delta wall   0.6 ms clock   0.7 ms
+          --pub_lines-- | total latency    45.4 ms | delta wall   0.2 ms clock   0.3 ms
+
+[INFO] [1513706486.470374]: [LineDetectorNode] 601:In the last 3.7 s: received 100 (26.8 fps) processed 100 (26.8 fps) skipped 0 (0.0 fps) (0%)
+[INFO] [1513706490.319545]: [LineDetectorNode] 701:# segments: white  17 yellow  16 red   6
+[INFO] [1513706490.320327]: [LineDetectorNode] 701:
+Latencies:
+               acquired | total latency    49.0 ms | delta wall     None clock     None
+                decoded | total latency    51.4 ms | delta wall   2.3 ms clock   2.4 ms
+                resized | total latency    51.5 ms | delta wall   0.1 ms clock   0.1 ms
+              corrected | total latency    51.5 ms | delta wall   0.0 ms clock   0.0 ms
+               detected | total latency    53.4 ms | delta wall   1.9 ms clock   2.4 ms
+               prepared | total latency    54.1 ms | delta wall   0.7 ms clock   0.8 ms
+          --pub_lines-- | total latency    54.5 ms | delta wall   0.3 ms clock   0.5 ms
+
+[INFO] [1513706490.349190]: [LineDetectorNode] 701:In the last 3.9 s: received 100 (25.8 fps) processed 100 (25.8 fps) skipped 0 (0.0 fps) (0%)
+[INFO] [1513706494.184165]: [LineDetectorNode] 801:# segments: white  24 yellow  18 red   3
+[INFO] [1513706494.184842]: [LineDetectorNode] 801:
+Latencies:
+               acquired | total latency    47.1 ms | delta wall     None clock     None
+                decoded | total latency    50.1 ms | delta wall   3.0 ms clock   2.9 ms
+                resized | total latency    50.2 ms | delta wall   0.1 ms clock   0.1 ms
+              corrected | total latency    50.3 ms | delta wall   0.0 ms clock   0.0 ms
+               detected | total latency    52.2 ms | delta wall   2.0 ms clock   2.6 ms
+               prepared | total latency    53.2 ms | delta wall   0.9 ms clock   1.1 ms
+          --pub_lines-- | total latency    53.4 ms | delta wall   0.2 ms clock   0.2 ms
+
+[INFO] [1513706494.223473]: [LineDetectorNode] 801:In the last 3.9 s: received 100 (25.8 fps) processed 100 (25.8 fps) skipped 0 (0.0 fps) (0%)
+[INFO] [1513706498.005528]: [LineDetectorNode] 901:# segments: white   3 yellow   0 red   3
+[INFO] [1513706498.006135]: [LineDetectorNode] 901:
+Latencies:
+               acquired | total latency    39.5 ms | delta wall     None clock     None
+                decoded | total latency    41.6 ms | delta wall   2.1 ms clock   2.1 ms
+                resized | total latency    41.7 ms | delta wall   0.2 ms clock   0.1 ms
+              corrected | total latency    41.8 ms | delta wall   0.0 ms clock   0.0 ms
+               detected | total latency    43.1 ms | delta wall   1.3 ms clock   2.0 ms
+               prepared | total latency    43.6 ms | delta wall   0.5 ms clock   0.6 ms
+          --pub_lines-- | total latency    43.8 ms | delta wall   0.1 ms clock   0.2 ms
+
+[INFO] [1513706498.034461]: [LineDetectorNode] 901:In the last 3.8 s: received 100 (26.2 fps) processed 100 (26.2 fps) skipped 0 (0.0 fps) (0%)
+[INFO] [1513706501.834106]: [LineDetectorNode] 1001:# segments: white  42 yellow  15 red   2
+[INFO] [1513706501.834959]: [LineDetectorNode] 1001:
+Latencies:
+               acquired | total latency   102.6 ms | delta wall     None clock     None
+                decoded | total latency   105.8 ms | delta wall   3.2 ms clock   3.1 ms
+                resized | total latency   106.0 ms | delta wall   0.1 ms clock   0.1 ms
+              corrected | total latency   106.0 ms | delta wall   0.0 ms clock   0.0 ms
+               detected | total latency   108.1 ms | delta wall   2.1 ms clock   2.6 ms
+               prepared | total latency   109.2 ms | delta wall   1.1 ms clock   1.2 ms
+          --pub_lines-- | total latency   109.6 ms | delta wall   0.4 ms clock   0.6 ms
+
+[INFO] [1513706501.866479]: [LineDetectorNode] 1001:In the last 3.8 s: received 100 (26.1 fps) processed 100 (26.1 fps) skipped 0 (0.0 fps) (0%)
+[INFO] [1513706505.708465]: [LineDetectorNode] 1101:# segments: white  29 yellow  15 red   3
+[INFO] [1513706505.709111]: [LineDetectorNode] 1101:
+Latencies:
+               acquired | total latency    76.5 ms | delta wall     None clock     None
+                decoded | total latency    79.4 ms | delta wall   2.9 ms clock   2.9 ms
+                resized | total latency    79.5 ms | delta wall   0.1 ms clock   0.1 ms
+              corrected | total latency    79.5 ms | delta wall   0.0 ms clock   0.0 ms
+               detected | total latency    81.5 ms | delta wall   2.0 ms clock   2.6 ms
+               prepared | total latency    82.2 ms | delta wall   0.8 ms clock   0.8 ms
+          --pub_lines-- | total latency    82.5 ms | delta wall   0.3 ms clock   0.3 ms
+
+[INFO] [1513706505.739907]: [LineDetectorNode] 1101:In the last 3.9 s: received 100 (25.8 fps) processed 100 (25.8 fps) skipped 0 (0.0 fps) (0%)
+[INFO] [1513706509.541454]: [LineDetectorNode] 1201:# segments: white  10 yellow  14 red   3
+[INFO] [1513706509.542218]: [LineDetectorNode] 1201:
+Latencies:
+               acquired | total latency    47.9 ms | delta wall     None clock     None
+                decoded | total latency    50.2 ms | delta wall   2.4 ms clock   2.3 ms
+                resized | total latency    50.3 ms | delta wall   0.1 ms clock   0.1 ms
+              corrected | total latency    50.3 ms | delta wall   0.0 ms clock   0.0 ms
+               detected | total latency    51.9 ms | delta wall   1.6 ms clock   2.1 ms
+               prepared | total latency    52.6 ms | delta wall   0.7 ms clock   0.7 ms
+          --pub_lines-- | total latency    52.9 ms | delta wall   0.3 ms clock   0.4 ms
+
+[INFO] [1513706509.575427]: [LineDetectorNode] 1201:In the last 3.8 s: received 100 (26.1 fps) processed 100 (26.1 fps) skipped 0 (0.0 fps) (0%)
+[INFO] [1513706513.382484]: [LineDetectorNode] 1301:# segments: white  14 yellow  14 red   3
+[INFO] [1513706513.383830]: [LineDetectorNode] 1301:
+Latencies:
+               acquired | total latency    52.7 ms | delta wall     None clock     None
+                decoded | total latency    58.0 ms | delta wall   5.3 ms clock   5.2 ms
+                resized | total latency    58.3 ms | delta wall   0.2 ms clock   0.2 ms
+              corrected | total latency    58.3 ms | delta wall   0.0 ms clock   0.0 ms
+               detected | total latency    62.3 ms | delta wall   4.0 ms clock   4.8 ms
+               prepared | total latency    63.9 ms | delta wall   1.5 ms clock   1.7 ms
+          --pub_lines-- | total latency    64.5 ms | delta wall   0.6 ms clock   0.8 ms
+
+[INFO] [1513706513.411962]: [LineDetectorNode] 1301:In the last 3.8 s: received 100 (26.1 fps) processed 100 (26.1 fps) skipped 0 (0.0 fps) (0%)

@@ -1,0 +1,6 @@
+import os
+os.environ['CLASSPATH'] = "/home/david/Documents/14_algorithmic_robotics/src/ar_tags/include/zxing/javase/target/javase-3.3.2-SNAPSHOT.jar:/home/david/Documents/14_algorithmic_robotics/src/ar_tags/include/zxing/core/core.jar"
+os.environ['JAVA_HOME'] = "/usr/lib/jvm/default-java"
+from jnius import autoclass
+runner = autoclass('com.google.zxing.client.j2se.CommandLineRunnerCustom')
+runner.readFromFileSystem(['goal_qrcode.png'])

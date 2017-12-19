@@ -18,13 +18,31 @@
         <arg name="veh" value="$(arg veh)"/>
     </include>
 
+
+    <arg name="marker_size" default="4.4" />
+	<arg name="max_new_marker_error" default="0.08" />
+	<arg name="max_track_error" default="0.2" />
+	<arg name="cam_image_topic" default="camera_node/image/" />
+	<arg name="cam_info_topic" default="camera_node/camera_info" />
+	<arg name="output_frame" default="/torso_lift_link" />
+
+	<node ns="$(arg veh)" name="ar_track_alvar" pkg="ar_track_alvar" type="individualMarkersNoKinect" respawn="false" output="screen">
+		<param name="marker_size"           type="double" value="$(arg marker_size)" />
+		<param name="max_new_marker_error"  type="double" value="$(arg max_new_marker_error)" />
+		<param name="max_track_error"       type="double" value="$(arg max_track_error)" />
+		<param name="output_frame"          type="string" value="$(arg output_frame)" />
+
+		<remap from="camera_image"  to="camera_node/image/" />
+		<remap from="camera_info"   to="camera_node/camera_info" />
+	</node>
+
     <!-- Tag detector node -->
+    <!--
     <node ns="$(arg veh)" name="tag_detector" pkg="ar_tags" type="tag_detector_remote.py" output="screen" required="true">
        <rosparam command="load" file="$(find duckietown)/config/ground_projection/$(arg veh).yaml"/>
        <remap from="~image" to="camera_node/image/"/>
        <remap from="~tags" to="tag_detector/tags"/>
-       <!-- <remap from="/pi/camera_node/image/raw" to="~image"/> -->
-    </node>
+    </node> -->
 
     <!-- planning node -->
     <node ns="$(arg veh)" name="searcher_node" pkg="final_project" type="searcher.py" output="screen" required="true">

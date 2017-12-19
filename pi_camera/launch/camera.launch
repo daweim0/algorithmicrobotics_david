@@ -1,13 +1,16 @@
 <?xml version="1.0"?>
 <launch>
     <arg name="veh" default="pi" doc="Name of vehicle."/>
+    <include file="$(find duckietown)/machines"/>
 
     <group ns="$(arg veh)">
+
+        <rosparam command="load" file="$(find duckietown)/config/pi_camera/pi.yaml"/>
         <!-- Publishes jpeg compressed images from the pi camera -->
         <node name="camera_node" machine="pi" pkg="pi_camera" type="camera_node.py" output="screen" required="true">
             <remap from="~compressed_image" to="camera_node/image/compressed"/>
         </node>
-        
+
         <!-- Publishes camera calibration parameters and provides a service to set them -->
         <node name="cam_info_node" pkg="pi_camera" type="cam_info_node.py" output="screen" required="true">
             <remap from="~image" to="camera_node/image/compressed"/>

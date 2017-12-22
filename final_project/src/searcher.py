@@ -6,11 +6,12 @@ from duckietown_msgs.msg import Twist2DStamped
 from sensor_msgs.msg import Range
 from duckietown_msgs.msg import Tag
 import pdb
+import time
 
 STANDOFF_DISTANCE = 25  # will turn if it gets closer than this to any wall
 TURNING_STANDOFF_DISTANCE = STANDOFF_DISTANCE + 10  # will keep turning untill it is at least this far from a wall
 
-SPEED_COEF = 1.0
+SPEED_COEF = 0.9
 
 TURNING_BEHAVIOR = "maxDist"
 
@@ -87,8 +88,15 @@ class searcher_node:
                     rospy.sleep(0.15)
                     self.set_velocity(0, 0)
                     self.dist_recording_list = list()
-                    self.set_velocity(0, 3.5)
-                    rospy.sleep(2.0)  # this should be enough time for the duckiebot to go in a full circle
+                    for i in range(16):
+                        self.set_velocity(0, -3.5)
+                        rospy.sleep(0.25)
+                        self.set_velocity(0, 0)
+                        rospy.sleep(0.5)  # there's a considerable delay between taking pictures and finding the tag
+                        if self.tag_detected == True:  # the duckie is pointing to the tag
+                            self.set_velocity(0, 0)
+                            self.in_loop = False
+                            return
                     self.set_velocity(0, 0)
                     max_dist = np.min([np.max(np.asarray(self.dist_recording_list)), 70])
                     self.dist_recording_list = None
@@ -102,7 +110,11 @@ class searcher_node:
 
 
     def home_torwards_tag(self):
+        rospy.sleep(4)
+        self.tag_detected = False
+
         centerline = -0.8
+        
         while self.last_dist > 45:
             if self.last_tag_id is None:
                 self.set_velocity(-2, 0)  # back up a little bit, maybe it will help
